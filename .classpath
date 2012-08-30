@@ -2,45 +2,45 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/antlr.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/asm.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/asm-attrs.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/cglib-nodep.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/dom4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/ehcache.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/hibernate3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/icu4j-3.4.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jdom.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jta.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/junit.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/log4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/lucene.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/spring.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/spring-mock.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons/commons-beanutils.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons/commons-collections.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons/commons-lang.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons/commons-logging.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons/commons-validator-1.4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/commons-codec/commons-codec-1.6.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/hsqldb/hsqldb.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/informa/informa.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-1.9.0-lite.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-acegisecurity-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-hibernate3-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-hibernate4-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-spring2-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-spring3-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-spring31-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-springsecurity2-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-springsecurity3-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-wicket13-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jaspyt/jasypt-wicket15-1.9.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/jspf/jspf.core-1.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/opennlp/opennlp-maxent-3.0.2-incubating.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/opennlp/opennlp-tools-1.5.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/opennlp/opennlp-tools-1.5.2-incubating.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/Java/JavaBot/lib/opennlp/opennlp-uima-1.5.2-incubating.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/antlr.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/asm.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/asm-attrs.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/cglib-nodep.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/dom4j.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/ehcache.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/hibernate3.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/icu4j-3.4.4.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/jdom.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/jta.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/junit.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/log4j.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/lucene.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/spring.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/Documents/GItHub/JavaBot/lib/spring-mock.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons/commons-beanutils.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons/commons-collections.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons/commons-lang.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons/commons-validator-1.4.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/commons-codec/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/hsqldb/hsqldb.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/informa/informa.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-1.9.0-lite.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-acegisecurity-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-hibernate3-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-hibernate4-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-spring2-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-spring3-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-spring31-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-springsecurity2-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-springsecurity3-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-wicket13-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jaspyt/jasypt-wicket15-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/jspf/jspf.core-1.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/opennlp/opennlp-maxent-3.0.2-incubating.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/opennlp/opennlp-tools-1.5.0.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/opennlp/opennlp-tools-1.5.2-incubating.jar"/>
+	<classpathentry kind="lib" path="/home/wei2912/.dropbox-files/Dropbox/Documents/GItHub/JavaBot/lib/opennlp/opennlp-uima-1.5.2-incubating.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
