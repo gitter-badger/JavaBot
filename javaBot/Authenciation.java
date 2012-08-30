@@ -1,0 +1,147 @@
+package javaBot;
+
+import java.util.ArrayList;
+import javaBot.tools.DatabaseReader;
+
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
+public class Authenciation implements Runnable {
+	static JavaBot	      bot;
+	static String	      sender;
+	static String	      message;
+	
+	final StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
+
+	public Authenciation(JavaBot bot, String sender, String message) {
+		Authenciation.bot = bot;
+		Authenciation.sender = sender;
+		Authenciation.message = message;
+	}
+
+	/**
+	 * Method to check if any users exist - if not let anyone register
+	 * themselves without authenciation This method must be called to check for
+	 * any user that exists in the database for every command that requires
+	 * authenciation.
+	 */
+	public static boolean checkNoUsers() {
+		// Checks if any user exists.
+		final DatabaseReader db = new DatabaseReader("users");
+		final ArrayList<String> users = new ArrayList<String>();
+		try {
+			db.setCom(db.getCon().createStatement());
+			db.setRec(db.getCom().executeQuery("select * from \"users\""));
+
+			while (db.getRec().next()) {
+				users.add(db.getRec().getString("username"));
+			}
+		}
+		catch (final Exception e) {
+			e.printStackTrace();
+		}
+
+		if (users.size() <= 0) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	@Override
+	public void run() {
+		if (Authenciation.message.startsWith(JavaBot.getPrefix() + "login ")) {
+			String user = Commands.checkParameter(Authenciation.message)[0];
+			String password = Commands.checkParameter(Authenciation.message)[1];
+
+			ArrayList<String> users = new ArrayList<String>();
+			ArrayList<String> passwords = new ArrayList<String>();
+			
+			final DatabaseReader db = new DatabaseReader("users");
+			try {
+				db.setCom(db.getCon().createStatement());
+				db.setRec(db.getCom().executeQuery("select * from \"users\""));
+
+				while (db.getRec().next()) {
+					users.add(db.getRec().getString("username"));
+					passwords.add(db.getRec().getString("password"));
+				}
+			}
+			catch (final Exception e) {
+				e.printStackTrace();
+			}
+
+			if (users.contains(user)) {
+				final int index = users.indexOf(user);
+
+				if (passwordEncryptor.checkPassword(password, passwords.get(index))) {
+					JavaBot.authenciated.add(Authenciation.sender);
+					Authenciation.bot.notice(Authenciation.sender,
+					        "You have been authenciated.");
+				}
+				else {
+					try {
+						Thread.sleep(JavaBot.getAuthenciationDelay());
+					}
+					catch (final Exception e) {
+						e.printStackTrace();
+					}
+					Authenciation.bot.notice(Authenciation.sender,
+					        "Password and username pair does not match.");
+				}
+			}
+			else {
+				try {
+					Thread.sleep(JavaBot.getAuthenciationDelay());
+				}
+				catch (final Exception e) {
+					e.printStackTrace();
+				}
+
+				Authenciation.bot.notice(Authenciation.sender,
+				        "Password and username pair does not match.");
+			}
+
+			// Cleaning up
+			user = "";
+			password = "";
+			for (int i = 0; i < users.size(); i++) {
+				users.remove(i);
+				passwords.remove(i);
+			}
+		}
+
+		else if (Authenciation.message.equalsIgnoreCase(JavaBot.getPrefix()
+		        + "logout")) {
+			if (JavaBot.authenciated.contains(Authenciation.sender)) {
+				JavaBot.authenciated.remove(JavaBot.authenciated
+				        .indexOf(Authenciation.sender));
+				Authenciation.bot.notice(Authenciation.sender,
+				        "You are now logged out.");
+			}
+			else {
+				Authenciation.bot.notice(Authenciation.sender,
+				        "You are not logged in.");
+			}
+		}
+		else if (Authenciation.message.startsWith(JavaBot.getPrefix()
+		        + "userAdd ")) {
+			if (JavaBot.authenciated.contains(Authenciation.sender)
+			        || Authenciation.checkNoUsers()) {
+				String user = Commands.checkParameter(Authenciation.message)[0];
+				String password = Commands.checkParameter(Authenciation.message)[1];
+				
+				Authenciation.bot.notice(Authenciation.sender,
+				        "Add these details to the database: ID " + user + " "
+				                + passwordEncryptor.encryptPassword(password));
+
+				// Cleaning up
+				user = "";
+				password = "";
+			}
+			else {
+				Commands.notEnoughStatus(Authenciation.sender);
+			}
+		}
+	}
+}

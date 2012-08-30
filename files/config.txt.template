@@ -1,0 +1,17 @@
+nick = JavaBot
+server = card.freenode.net
+channels = #javabot
+password = asdasdasdads
+prefix = #
+messageDelay = 0
+
+# FloodPreventor
+floodDuration = 10000
+throttledTime = 60000
+messageLimit = 8
+
+# Protection mode - false or true
+protectMode = false
+
+# Authenciation security
+authenciationDelay = 10000
