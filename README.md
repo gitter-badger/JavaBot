@@ -13,8 +13,7 @@ Contents of this bot is as such:
 6. Java Simple Plugin Framework              
 
 Files in root directory:         
-config.txt - Configuration         
-feedback.txt - Feedback         
+config.txt - Configuration, refer to config.txt.template               
 humor.txt - Humor (add anything you want)         
 
 =========================================================================
