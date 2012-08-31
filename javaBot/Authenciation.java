@@ -26,14 +26,14 @@ public class Authenciation implements Runnable {
 	 */
 	public static boolean checkNoUsers() {
 		// Checks if any user exists.
-		final DatabaseReader db = new DatabaseReader("users");
+		final DatabaseReader dbreader = new DatabaseReader("users");
 		final ArrayList<String> users = new ArrayList<String>();
 		try {
-			db.setCom(db.getCon().createStatement());
-			db.setRec(db.getCom().executeQuery("select * from \"users\""));
+			dbreader.setCom(dbreader.getCon().createStatement());
+			dbreader.setRec(dbreader.getCom().executeQuery("select * from \"users\""));
 
-			while (db.getRec().next()) {
-				users.add(db.getRec().getString("username"));
+			while (dbreader.getRec().next()) {
+				users.add(dbreader.getRec().getString("username"));
 			}
 		}
 		catch (final Exception e) {
@@ -54,17 +54,17 @@ public class Authenciation implements Runnable {
 			String user = Commands.checkParameter(Authenciation.message)[0];
 			String password = Commands.checkParameter(Authenciation.message)[1];
 
-			ArrayList<String> users = new ArrayList<String>();
-			ArrayList<String> passwords = new ArrayList<String>();
+			final ArrayList<String> users = new ArrayList<String>();
+			final ArrayList<String> passwords = new ArrayList<String>();
 			
-			final DatabaseReader db = new DatabaseReader("users");
+			final DatabaseReader dbreader = new DatabaseReader("users");
 			try {
-				db.setCom(db.getCon().createStatement());
-				db.setRec(db.getCom().executeQuery("select * from \"users\""));
+				dbreader.setCom(dbreader.getCon().createStatement());
+				dbreader.setRec(dbreader.getCom().executeQuery("select * from \"users\""));
 
-				while (db.getRec().next()) {
-					users.add(db.getRec().getString("username"));
-					passwords.add(db.getRec().getString("password"));
+				while (dbreader.getRec().next()) {
+					users.add(dbreader.getRec().getString("username"));
+					passwords.add(dbreader.getRec().getString("password"));
 				}
 			}
 			catch (final Exception e) {
