@@ -169,8 +169,7 @@ public class JavaBot extends PircBot implements Runnable {
 	}
 
 	@Override
-	protected void onMessage(String channel, String sender, String login,
-	        String hostname, String message) {
+	protected void onMessage(String channel, String sender, String login, String hostname, String message) {
 		if (message.startsWith(JavaBot.getPrefix())) {
 			try {
 				new Thread(new Commands(this, sender, login, channel, hostname,

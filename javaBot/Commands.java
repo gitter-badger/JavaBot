@@ -29,8 +29,6 @@ public class Commands implements Runnable {
 
 	Collection<javaBotPlugin>	plugins;
 
-	javaBot.plugins.IPlookup	IPlookup;
-
 	/** Constructor of the class Commands */
 	public Commands(JavaBot bot, String sender, String login, String channel,
 	        String hostname, String message) throws MalformedURLException {
