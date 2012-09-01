@@ -10,11 +10,16 @@ Contents of this bot is as such:
 5. HSQLDB         
 4. Informa         
 5. Jaspyt         
-6. Java Simple Plugin Framework              
+6. Java Simple Plugin Framework  
+7. log4j
+5. Spring
+
+(Don't worry, all are open source)                             
 
 Files in root directory:         
 config.txt - Configuration, refer to config.txt.template               
-humor.txt - Humor (add anything you want)         
+humor.txt - Humor (add anything you want)     
+log4j.properties - log4j properties config file, edit only if you are experienced.                 
 
 =========================================================================
 
