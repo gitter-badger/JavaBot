@@ -12,14 +12,6 @@ public abstract class javaBotPluginAbstract implements javaBotPlugin {
 
 	}
 
-	/** Function to run the plugin as a thread **/
-	@Override
-	public void exec() {
-		new Thread(this).start();
-	}
-
-	/** To be overridded **/
-	@Override
 	public void run() {
 
 	}

@@ -127,7 +127,7 @@ public class Commands {
 			/** PLUGINS */
 			for (final javaBotPlugin plugin : this.plugins) {
 				plugin.init(Commands.bot, this.message, this.channel, this.sender);
-				plugin.exec();
+				plugin.run();
 			}
 		}
 	}
