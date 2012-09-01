@@ -5,7 +5,7 @@ import javaBot.tools.DatabaseReader;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
-public class Authenciation implements Runnable {
+public class Authenciation {
 	static JavaBot	      bot;
 	static String	      sender;
 	static String	      message;
@@ -48,7 +48,6 @@ public class Authenciation implements Runnable {
 		}
 	}
 
-	@Override
 	public void run() {
 		if (Authenciation.message.startsWith(JavaBot.getPrefix() + "login ")) {
 			String user = Commands.checkParameter(Authenciation.message)[0];
@@ -75,7 +74,7 @@ public class Authenciation implements Runnable {
 				final int index = users.indexOf(user);
 
 				if (passwordEncryptor.checkPassword(password, passwords.get(index))) {
-					JavaBot.authenciated.add(Authenciation.sender);
+					JavaBot.AUTHENCIATED.add(Authenciation.sender);
 					Authenciation.bot.notice(Authenciation.sender,
 					        "You have been authenciated.");
 				}
@@ -113,8 +112,8 @@ public class Authenciation implements Runnable {
 
 		else if (Authenciation.message.equalsIgnoreCase(JavaBot.getPrefix()
 		        + "logout")) {
-			if (JavaBot.authenciated.contains(Authenciation.sender)) {
-				JavaBot.authenciated.remove(JavaBot.authenciated
+			if (JavaBot.AUTHENCIATED.contains(Authenciation.sender)) {
+				JavaBot.AUTHENCIATED.remove(JavaBot.AUTHENCIATED
 				        .indexOf(Authenciation.sender));
 				Authenciation.bot.notice(Authenciation.sender,
 				        "You are now logged out.");
@@ -126,7 +125,7 @@ public class Authenciation implements Runnable {
 		}
 		else if (Authenciation.message.startsWith(JavaBot.getPrefix()
 		        + "userAdd ")) {
-			if (JavaBot.authenciated.contains(Authenciation.sender)
+			if (JavaBot.AUTHENCIATED.contains(Authenciation.sender)
 			        || Authenciation.checkNoUsers()) {
 				String user = Commands.checkParameter(Authenciation.message)[0];
 				String password = Commands.checkParameter(Authenciation.message)[1];

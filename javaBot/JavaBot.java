@@ -22,44 +22,36 @@ import wei2912.utilities.Generator;
 /** JavaBot main class */
 public class JavaBot extends PircBot implements Runnable {
 
-	// Constants
-	private static String	           channel	          = "";
-	private static long	               delay	          = 0;
-	private static String	           name	              = "";
-	private static String	           password	          = "";
-	private static String	           prefix	          = "";
-	private static String	           server	          = "";
-	static String[]	                   channelArray;
+	private static String CHANNEL = "";
+	private static long DELAY = 0;
+	private static String NAME = "";
+	private static String PASSWORD = "";
+	private static String PREFIX = "";
+	private static String SERVER = "";
+	static String[] CHANNEL_ARRAY;
 
-	protected static ArrayList<String>	authenciated	  = new ArrayList<String>();
+	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>();
 
-	// Cycle boolean
-	static boolean	                   cycle	          = false;
+	static boolean CYCLE = false;
 
-	// FloodPreventor
-	private static long	               floodDuration	  = 0;
-	private static long	               throttledTime	  = 0;
-	private static long	               messageLimit	      = 0;
+	private static long	FLOOD_DURATION = 0;
+	private static long	THROTTLED_TIME = 0;
+	private static long	MESSAGE_LIMIT = 0;
 
-	// Protection mode
-	private static boolean	           protectMode	      = false;
+	private static boolean PROTECT_MODE = false;
 
-	// Authenciation delay
-	private static long	               authenciationDelay	= 0;
+	private static long AUTHENCIATION_DELAY = 0;
 
-	// Variables for systems
-	String	                           line	              = null;
-	ArrayList<String>	               configArray	      = new ArrayList<String>();
-	ArrayList<String>	               configNameArray	  = new ArrayList<String>();
-	File	                           config	          = new File(
-	                                                              "files/config.txt");
-	BufferedReader	                   configIn;
-	BufferedReader	                   in;
+	String line	              = null;
+	static ArrayList<String>	               configArray	      = new ArrayList<String>();
+	static ArrayList<String>	               configNameArray	  = new ArrayList<String>();
+	File config	          = new File("files/config.txt");
+	BufferedReader configIn;
+	BufferedReader in;
 
 	protected JavaBot() {
 		try {
 
-			/** Config */
 			this.configIn = new BufferedReader(new FileReader(this.config));
 			this.line = this.configIn.readLine();
 
@@ -67,44 +59,32 @@ public class JavaBot extends PircBot implements Runnable {
 				final String[] array = this.line.split("=");
 
 				if (array.length == 2) {
-					this.configNameArray.add(array[0].replaceAll("=", "")
-					        .trim());
-					this.configArray.add(array[1].trim());
+					JavaBot.configNameArray.add(array[0].replaceAll("=", "").trim());
+					JavaBot.configArray.add(array[1].trim());
 				}
 
 				this.line = this.configIn.readLine();
 			}
 
 			try {
-				JavaBot.name = this.configArray.get(this.configNameArray
-				        .indexOf("nick"));
-				JavaBot.server = this.configArray.get(this.configNameArray
-				        .indexOf("server"));
-				JavaBot.channel = this.configArray.get(this.configNameArray
-				        .indexOf("channels"));
-				JavaBot.password = this.configArray.get(this.configNameArray
-				        .indexOf("password"));
-				JavaBot.prefix = this.configArray.get(this.configNameArray
-				        .indexOf("prefix"));
-				JavaBot.delay = Long.parseLong(this.configArray
-				        .get(this.configNameArray.indexOf("messageDelay")));
+				JavaBot.NAME = JavaBot.getConfig("nick");
+				JavaBot.SERVER = JavaBot.getConfig("server");
+				JavaBot.CHANNEL = JavaBot.getConfig("channels");
+				JavaBot.PASSWORD = JavaBot.getConfig("password");
+				JavaBot.PREFIX = JavaBot.getConfig("prefix");
+				JavaBot.DELAY = Long.parseLong(JavaBot.getConfig("messageDelay"));
 
-				JavaBot.floodDuration = Long.parseLong(this.configArray
-				        .get(this.configNameArray.indexOf("floodDuration")));
-				JavaBot.throttledTime = Long.parseLong(this.configArray
-				        .get(this.configNameArray.indexOf("throttledTime")));
-				JavaBot.messageLimit = Long.parseLong(this.configArray
-				        .get(this.configNameArray.indexOf("messageLimit")));
+				JavaBot.FLOOD_DURATION = Long.parseLong(JavaBot.getConfig("floodDuration"));
+				JavaBot.THROTTLED_TIME = Long.parseLong(JavaBot.getConfig("throttledTime"));
+				JavaBot.MESSAGE_LIMIT = Long.parseLong(JavaBot.getConfig("messageLimit"));
 
-				JavaBot.protectMode = Boolean.parseBoolean(this.configArray
-				        .get(this.configNameArray.indexOf("protectMode")));
+				JavaBot.PROTECT_MODE = Boolean.parseBoolean(JavaBot.getConfig("protectMode"));
 
-				JavaBot.authenciationDelay = Long
-				        .parseLong(this.configArray.get(this.configNameArray
-				                .indexOf("authenciationDelay")));
+				JavaBot.AUTHENCIATION_DELAY = Long.parseLong(JavaBot.getConfig("authenciationDelay"));
 			}
 			catch (final Exception e) {
 				e.printStackTrace();
+
 				System.out.println("ERROR: Please recheck the config file.");
 				System.exit(0);
 			}
@@ -113,8 +93,8 @@ public class JavaBot extends PircBot implements Runnable {
 			e.printStackTrace();
 		}
 
-		/** Channels to join */
-		JavaBot.channelArray = JavaBot.channel.split(" ");
+		/** CHANNEls to join */
+		JavaBot.CHANNEL_ARRAY = JavaBot.CHANNEL.split(" ");
 	}
 
 	@Override
@@ -124,21 +104,21 @@ public class JavaBot extends PircBot implements Runnable {
 		final JavaBot bot = new JavaBot();
 
 		// Set options
-		bot.setName(JavaBot.name);
-		bot.setMessageDelay(JavaBot.delay);    // Set message delay.
+		bot.setName(JavaBot.NAME);
+		bot.setMessageDelay(JavaBot.DELAY);    // Set message delay.
 
 		// Set debugging
 		bot.setVerbose(true);
 
 		// Connect to the IRC server.
 		try {
-			bot.connect(JavaBot.server);
+			bot.connect(JavaBot.SERVER);
 		}
 		catch (final NickAlreadyInUseException e) {
-			JavaBot.name = JavaBot.name + Math.abs(Generator.generateInt());
-			bot.setName(JavaBot.name);
+			JavaBot.NAME = JavaBot.NAME + Math.abs(Generator.generateInt());
+			bot.setName(JavaBot.NAME);
 			try {
-				bot.connect(JavaBot.server);
+				bot.connect(JavaBot.SERVER);
 			}
 			catch (final Exception e2) {
 				e.printStackTrace();
@@ -149,12 +129,12 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 
 		// Identify the bot.
-		bot.identify(JavaBot.password);
+		bot.identify(JavaBot.PASSWORD);
 		
 		// Adds botmode
 		bot.sendRawLine("MODE "+JavaBot.getBotName()+" +B");
 		
-		// Delay of a second before joining channels.
+		// Delay of a second before joining CHANNEls.
 		try {
 			Thread.sleep(1000);
 		}
@@ -162,29 +142,27 @@ public class JavaBot extends PircBot implements Runnable {
 			e1.printStackTrace();
 		}
 
-		for (final String element : JavaBot.channelArray) {
-			// Join the channels.
+		for (final String element : JavaBot.CHANNEL_ARRAY) {
+			// Join the CHANNEls.
 			bot.joinChannel(element);
 		}
 	}
 
 	@Override
-	protected void onMessage(String channel, String sender, String login, String hostname, String message) {
+	protected void onMessage(String CHANNEl, String sender, String login, String hostname, 
+		String message) {
 		if (message.startsWith(JavaBot.getPrefix())) {
 			try {
-				new Thread(new Commands(this, sender, login, channel, hostname,
-				        message)).start();
+				new Commands(this, sender, login, CHANNEl, hostname, message).run();
 			}
 			catch (final MalformedURLException e) {
 				e.printStackTrace();
 			}
 		}
 
-		new Thread(new Security(this, channel, sender, message, hostname))
-		        .start();
-		new Thread(new FloodPreventor(this, channel, sender, message,
-		        JavaBot.floodDuration, JavaBot.messageLimit,
-		        JavaBot.throttledTime)).start();
+		new Security(this, CHANNEl, sender, message, hostname).run();
+		new FloodPreventor(this, CHANNEl, sender, message, JavaBot.FLOOD_DURATION, 
+			JavaBot.MESSAGE_LIMIT, JavaBot.THROTTLED_TIME).run();
 	}
 
 	@Override
@@ -192,9 +170,8 @@ public class JavaBot extends PircBot implements Runnable {
 	        String hostname, String message) {
 		if (message.startsWith(JavaBot.getPrefix())) {
 			try {
-				new Thread(new Commands(this, sender, login, sender, hostname,
-				        message)).start();
-				new Thread(new Authenciation(this, sender, message)).start();
+				new Commands(this, sender, login, sender, hostname, message).run();
+				new Authenciation(this, sender, message).run();
 			}
 			catch (final MalformedURLException e) {
 				e.printStackTrace();
@@ -203,37 +180,35 @@ public class JavaBot extends PircBot implements Runnable {
 	}
 
 	@Override
-	protected void onKick(String channel, String kickerNick,
+	protected void onKick(String CHANNEl, String kickerNick,
 	        String kickerLogin, String kickerHostname, String recipientNick,
 	        String reason) {
-		if (JavaBot.protectMode) {
-			if (recipientNick.equals(JavaBot.name)
+		if (JavaBot.PROTECT_MODE) {
+			if (recipientNick.equals(JavaBot.NAME)
 			        && !kickerNick.equals("ChanServ")) {
-				this.joinChannel(channel);
+				this.joinChannel(CHANNEl);
 
-				// For a better ban
 				final StringBuffer kicker = new StringBuffer(kickerHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(channel, kicker.toString());
-				this.kick(channel, kickerNick);
+				this.ban(CHANNEl, kicker.toString());
+				this.kick(CHANNEl, kickerNick);
 			}
 		}
 	}
 
 	@Override
-	protected void onSetChannelBan(String channel, String sourceNick,
+	protected void onSetChannelBan(String CHANNEl, String sourceNick,
 	        String sourceLogin, String sourceHostname, String hostmask) {
-		if (JavaBot.protectMode) {
+		if (JavaBot.PROTECT_MODE) {
 			if (hostmask.equals("*!*@*") && !sourceNick.equals("ChanServ")) {
 
-				// For a better ban
 				final StringBuffer kicker = new StringBuffer(sourceHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(channel, kicker.toString());
-				this.kick(channel, sourceNick);
-				this.unBan(channel, "*!*@*");
+				this.ban(CHANNEl, kicker.toString());
+				this.kick(CHANNEl, sourceNick);
+				this.unBan(CHANNEl, "*!*@*");
 
 				try {
 					Thread.sleep(1000);
@@ -242,19 +217,18 @@ public class JavaBot extends PircBot implements Runnable {
 					e.printStackTrace();
 				}
 
-				this.setMode(channel, "-il");
+				this.setMode(CHANNEl, "-il");
 			}
 			else if (hostmask.contains("JavaBot")
 			        && !sourceNick.equals("ChanServ")) {
 
-				// For a better ban
-				this.sendMessage("ChanServ", "recover " + channel);
+				this.sendMessage("ChanServ", "recover " + CHANNEl);
 
 				final StringBuffer kicker = new StringBuffer(sourceHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(channel, kicker.toString());
-				this.kick(channel, sourceNick);
+				this.ban(CHANNEl, kicker.toString());
+				this.kick(CHANNEl, sourceNick);
 				try {
 					Thread.sleep(1000);
 				}
@@ -262,7 +236,7 @@ public class JavaBot extends PircBot implements Runnable {
 					e.printStackTrace();
 				}
 
-				this.setMode(channel, "-il");
+				this.setMode(CHANNEl, "-il");
 			}
 		}
 	}
@@ -279,16 +253,16 @@ public class JavaBot extends PircBot implements Runnable {
 
 	/**
 	 * Wrapper method to send notices. It will send notices when it is in a
-	 * channel with the same user which means the user will obtain the
-	 * notification in the channel itself. If the user is not in the channels
+	 * CHANNEl with the same user which means the user will obtain the
+	 * notification in the CHANNEl itself. If the user is not in the CHANNEls
 	 * the bot is in, the bot sends a private message instead.
 	 */
 	public void notice(String sender, String message) {
-		final String[] channels = JavaBot.channel.split(" ");
+		final String[] CHANNEls = JavaBot.CHANNEL.split(" ");
 
 		boolean found = false;
-		for (final String channel2 : channels) {
-			final User[] userList = this.getUsers(channel2);
+		for (final String CHANNEl2 : CHANNEls) {
+			final User[] userList = this.getUsers(CHANNEl2);
 			for (final User user : userList) {
 				if (user.getNick().equals(sender)) {
 					found = true;
@@ -308,30 +282,40 @@ public class JavaBot extends PircBot implements Runnable {
 			this.sendMessage(sender, message); // Sends a private message
 		}
 	}
+	
+	private static String getConfig(String parameter) {
+		if (JavaBot.configNameArray.contains(parameter)) { 
+			return JavaBot.configArray.get(JavaBot.configNameArray.indexOf(parameter));
+		}
+		else {
+			throw new java.lang.NullPointerException(parameter + " not found in configNameArray. " + 
+				"\n" +"Please recheck the config file.");
+		}
+	}
 
 	// Getter methods
 	public static String getBotName() {
-		return JavaBot.name;
+		return JavaBot.NAME;
 	}
 
-	public static String getChannel() {
-		return JavaBot.channel;
+	public static String getCHANNEl() {
+		return JavaBot.CHANNEL;
 	}
 
 	public static long getDelay() {
-		return JavaBot.delay;
+		return JavaBot.DELAY;
 	}
 
 	public static String getPrefix() {
-		return JavaBot.prefix;
+		return JavaBot.PREFIX;
 	}
 
 	public static String getServerName() {
-		return JavaBot.server;
+		return JavaBot.SERVER;
 	}
 
 	protected static long getAuthenciationDelay() {
-		return JavaBot.authenciationDelay;
+		return JavaBot.AUTHENCIATION_DELAY;
 	}
 }
 

@@ -15,7 +15,7 @@ import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.jibble.pircbot.User;
 
-public class Commands implements Runnable {
+public class Commands {
 	int	                      a;
 	static JavaBot	          bot;
 	String	                  channel;
@@ -29,7 +29,6 @@ public class Commands implements Runnable {
 
 	Collection<javaBotPlugin>	plugins;
 
-	/** Constructor of the class Commands */
 	public Commands(JavaBot bot, String sender, String login, String channel,
 	        String hostname, String message) throws MalformedURLException {
 		Commands.bot = bot;
@@ -39,7 +38,6 @@ public class Commands implements Runnable {
 		this.message = message;
 		this.login = login;
 
-		/** Enable caching **/
 		final JSPFProperties props = new JSPFProperties();
 
 		props.setProperty(PluginManager.class, "cache.enabled", "true");
@@ -47,21 +45,17 @@ public class Commands implements Runnable {
 
 		this.pm = PluginManagerFactory.createPluginManager(props);
 
-		/** Adds all commandPlugins */
 		this.pm.addPluginsFrom(new File("plugins/").toURI());
 		this.plugins = new PluginManagerUtil(this.pm)
 		        .getPlugins(javaBotPlugin.class);
 	}
 
-	/** Method to run when thread starts, detects the commands **/
-	@Override
 	public void run() {
 
 		if (this.message.startsWith(JavaBot.getPrefix())) {
 
-			/** DEFAULT COMMANDS - DO NOT REMOVE */
 			if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "quit")) {
-				if (JavaBot.authenciated.contains(this.sender)
+				if (JavaBot.AUTHENCIATED.contains(this.sender)
 				        || Authenciation.checkNoUsers()) {
 					Commands.bot.disconnect();
 				}
@@ -73,7 +67,7 @@ public class Commands implements Runnable {
 			else if (this.message.startsWith(JavaBot.getPrefix() + "join ")) {
 				final String parameter = Commands.checkParameter(this.message)[0];
 
-				if (JavaBot.authenciated.contains(this.sender)
+				if (JavaBot.AUTHENCIATED.contains(this.sender)
 				        || Authenciation.checkNoUsers()) {
 					Commands.bot.joinChannel(parameter);
 				}
@@ -84,7 +78,7 @@ public class Commands implements Runnable {
 
 			else if (this.message
 			        .equalsIgnoreCase(JavaBot.getPrefix() + "part")) {
-				if (JavaBot.authenciated.contains(this.sender)
+				if (JavaBot.AUTHENCIATED.contains(this.sender)
 				        || Authenciation.checkNoUsers()) {
 					Commands.bot.partChannel(this.channel, this.sender);
 				}
@@ -95,7 +89,7 @@ public class Commands implements Runnable {
 
 			else if (this.message.startsWith(JavaBot.getPrefix() + "part ")) {
 				final String parameter = Commands.checkParameter(this.message)[0];
-				if (JavaBot.authenciated.contains(this.sender)
+				if (JavaBot.AUTHENCIATED.contains(this.sender)
 				        || Authenciation.checkNoUsers()) {
 					Commands.bot.partChannel(parameter, this.sender);
 				}
@@ -107,7 +101,7 @@ public class Commands implements Runnable {
 			else if (this.message.startsWith(JavaBot.getPrefix() + "tell ")) {
 				final String user = Commands.checkParameter(this.message)[0];
 				final String messageTold = Commands.checkParameter(this.message)[1];
-				if (JavaBot.authenciated.contains(this.sender) || Authenciation.checkNoUsers()) {
+				if (JavaBot.AUTHENCIATED.contains(this.sender) || Authenciation.checkNoUsers()) {
 					Commands.bot.sendMessage(user, messageTold);
 				}
 				else {
@@ -127,7 +121,7 @@ public class Commands implements Runnable {
 			else if (this.message.startsWith(JavaBot.getPrefix() + "help ")) {
 				final String command = Commands.checkParameter(this.message)[0];
 
-				// To be implemented
+				//TODO To be implemented
 			}
 
 			/** PLUGINS */

@@ -1,6 +1,6 @@
 package javaBot;
 
-public class Security implements Runnable {
+public class Security {
 	JavaBot	bot;
 	String	channel;
 	String	hostname;
@@ -16,7 +16,6 @@ public class Security implements Runnable {
 		this.hostname = hostname;
 	}
 
-	@Override
 	public void run() {
 
 		/** Security - checks messages sent */
@@ -52,8 +51,6 @@ public class Security implements Runnable {
 				Thread.sleep(1000);
 			}
 			catch (final InterruptedException e) {
-
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

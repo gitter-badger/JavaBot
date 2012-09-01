@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class FloodPreventor implements Runnable {
+public class FloodPreventor {
 	static JavaBot	          bot;
 	static String	          channel;
 	static String	          sender;
@@ -27,7 +27,6 @@ public class FloodPreventor implements Runnable {
 		FloodPreventor.throttledTime = throttledTime;
 	}
 
-	@Override
 	public void run() {
 		if (FloodPreventor.nicks.contains(FloodPreventor.sender)) {
 			FloodPreventor.times.set(FloodPreventor.nicks
