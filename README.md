@@ -1,5 +1,7 @@
 JavaBot-IRC
 ===========
+An IRC bot, designed for simplicity and customizability.
+===========
 
 Contents of this bot is as such:         
 1. JavaBot          
