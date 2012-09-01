@@ -25,7 +25,6 @@ public class Authenciation {
 	 * authenciation.
 	 */
 	public static boolean checkNoUsers() {
-		// Checks if any user exists.
 		final DatabaseReader dbreader = new DatabaseReader("users");
 		final ArrayList<String> users = new ArrayList<String>();
 		try {
@@ -37,7 +36,7 @@ public class Authenciation {
 			}
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			bot.log(e.getStackTrace().toString());
 		}
 
 		if (users.size() <= 0) {
@@ -67,7 +66,7 @@ public class Authenciation {
 				}
 			}
 			catch (final Exception e) {
-				e.printStackTrace();
+				bot.log(e.getStackTrace().toString());
 			}
 
 			if (users.contains(user)) {
@@ -83,7 +82,7 @@ public class Authenciation {
 						Thread.sleep(JavaBot.getAuthenciationDelay());
 					}
 					catch (final Exception e) {
-						e.printStackTrace();
+						bot.log(e.getStackTrace().toString());
 					}
 					Authenciation.bot.notice(Authenciation.sender,
 					        "Password and username pair does not match.");
@@ -94,14 +93,13 @@ public class Authenciation {
 					Thread.sleep(JavaBot.getAuthenciationDelay());
 				}
 				catch (final Exception e) {
-					e.printStackTrace();
+					bot.log(e.getStackTrace().toString());
 				}
 
 				Authenciation.bot.notice(Authenciation.sender,
 				        "Password and username pair does not match.");
 			}
 
-			// Cleaning up
 			user = "";
 			password = "";
 			for (int i = 0; i < users.size(); i++) {
@@ -110,21 +108,18 @@ public class Authenciation {
 			}
 		}
 
-		else if (Authenciation.message.equalsIgnoreCase(JavaBot.getPrefix()
-		        + "logout")) {
+		else if (Authenciation.message.equalsIgnoreCase(JavaBot.getPrefix() + "logout")) {
 			if (JavaBot.AUTHENCIATED.contains(Authenciation.sender)) {
-				JavaBot.AUTHENCIATED.remove(JavaBot.AUTHENCIATED
-				        .indexOf(Authenciation.sender));
-				Authenciation.bot.notice(Authenciation.sender,
-				        "You are now logged out.");
+				JavaBot.AUTHENCIATED.remove(JavaBot.AUTHENCIATED.indexOf(Authenciation.sender));
+				Authenciation.bot.notice(Authenciation.sender, "You are now logged out.");
 			}
+			
 			else {
-				Authenciation.bot.notice(Authenciation.sender,
-				        "You are not logged in.");
+				Authenciation.bot.notice(Authenciation.sender, "You are not logged in.");
 			}
 		}
-		else if (Authenciation.message.startsWith(JavaBot.getPrefix()
-		        + "userAdd ")) {
+		
+		else if (Authenciation.message.startsWith(JavaBot.getPrefix() + "userAdd ")) {
 			if (JavaBot.AUTHENCIATED.contains(Authenciation.sender)
 			        || Authenciation.checkNoUsers()) {
 				String user = Commands.checkParameter(Authenciation.message)[0];
@@ -134,7 +129,6 @@ public class Authenciation {
 				        "Add these details to the database: ID " + user + " "
 				                + passwordEncryptor.encryptPassword(password));
 
-				// Cleaning up
 				user = "";
 				password = "";
 			}

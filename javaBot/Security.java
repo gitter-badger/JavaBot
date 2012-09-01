@@ -19,8 +19,7 @@ public class Security {
 	public void run() {
 
 		/** Security - checks messages sent */
-		if (this.message.startsWith("!kick")
-		        && this.message.endsWith(JavaBot.getBotName())) {
+		if (this.message.startsWith("!kick") && this.message.endsWith(JavaBot.getBotName())) {
 
 			// If get kicked by chanserv from another user
 			this.bot.joinChannel(this.channel);
@@ -36,7 +35,6 @@ public class Security {
 		        && this.message.endsWith(JavaBot.getBotName())) {
 
 			// If get kicked by chanserv from another user
-			System.out.println(this.channel);
 			this.bot.sendMessage("ChanServ", "recover " + this.channel);
 			this.bot.joinChannel(this.channel);
 
@@ -51,7 +49,7 @@ public class Security {
 				Thread.sleep(1000);
 			}
 			catch (final InterruptedException e) {
-				e.printStackTrace();
+				bot.log(e.getStackTrace().toString());
 			}
 
 			this.bot.setMode(this.channel, "-il");

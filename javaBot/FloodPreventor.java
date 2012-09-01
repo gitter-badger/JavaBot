@@ -29,17 +29,14 @@ public class FloodPreventor {
 
 	public void run() {
 		if (FloodPreventor.nicks.contains(FloodPreventor.sender)) {
-			FloodPreventor.times.set(FloodPreventor.nicks
-			        .indexOf(FloodPreventor.sender),
-			        FloodPreventor.times.get(FloodPreventor.nicks
-			                .indexOf(FloodPreventor.sender)) + 1);
+			FloodPreventor.times.set(FloodPreventor.nicks.indexOf(FloodPreventor.sender),
+				FloodPreventor.times.get(FloodPreventor.nicks.indexOf(FloodPreventor.sender)) + 1);
 		}
 		else {
 			FloodPreventor.nicks.add(FloodPreventor.sender);
 			FloodPreventor.times.add(1);
 
-			final int index = FloodPreventor.nicks
-			        .indexOf(FloodPreventor.sender);
+			final int index = FloodPreventor.nicks.indexOf(FloodPreventor.sender);
 
 			final Timer remover = new Timer();
 
