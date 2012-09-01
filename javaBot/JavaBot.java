@@ -122,7 +122,7 @@ public class JavaBot extends PircBot implements Runnable {
 			Thread.sleep(1000);
 		}
 		catch (final InterruptedException e1) {
-			log(e1.getStackTrace().toString());;
+			log(e1.getStackTrace().toString());
 		}
 
 		for (final String element : JavaBot.CHANNEL_ARRAY) {

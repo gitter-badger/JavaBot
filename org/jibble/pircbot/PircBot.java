@@ -28,6 +28,8 @@ import java.util.TimerTask;
 
 import javax.net.SocketFactory;
 
+import org.apache.log4j.Logger;
+
 /**
  * PircBot-PPF is a Java framework for writing IRC bots quickly and easily. This
  * has been built up as a fork of PircBot from <a
@@ -73,6 +75,11 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 * this before automatically building releases)
 	 */
 	public static final String	VERSION	= "1.1.0";
+	
+	/**
+	 * 
+	 */
+	public static Logger logger = Logger.getRootLogger();
 
 	/**
 	 * Log file time stamp - changes every day
@@ -891,7 +898,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	@Override
 	public void log(String line) {
 		if (this._verbose) {
-			System.out.println(System.currentTimeMillis() + " " + line);
+			logger.info(System.currentTimeMillis() + " " + line);
 		}
 
 		if (PircBot.logfile.equals("")) {
@@ -920,10 +927,10 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 				logWriter.close();
 			}
 			catch (final FileNotFoundException e1) {
-
+				log(e1.getStackTrace().toString());
 			}
 			catch (final Exception e2) {
-				e2.printStackTrace();
+				log(e2.getStackTrace().toString());
 			}
 		}
 
