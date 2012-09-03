@@ -1,14 +1,14 @@
 nick = JavaBot
 server = card.freenode.net
 channels = #javabot
-password = asdasdasdads
+password = SET ACCORDING
 prefix = #
 messageDelay = 0
 
 # FloodPreventor
 floodDuration = 10000
+messageLimit = 9
 throttledTime = 60000
-messageLimit = 8
 
 # Protection mode - false or true
 protectMode = false
