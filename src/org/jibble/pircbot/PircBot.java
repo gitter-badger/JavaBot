@@ -6,7 +6,6 @@ package org.jibble.pircbot;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -95,6 +94,10 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 		PropertyConfigurator.configure("files/log4j.properties");
 		
 		this.logger.setLevel(Level.INFO);
+		
+		log("     ");
+		log("     ");
+		log("==== Bot started ====");
 	}
 
 	/**
@@ -897,22 +900,6 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	public void log(String line) {
 		if (this._verbose) {
 			logger.info(line);
-		}
-		
-		try {
-			File log = new File("log");
-			
-			if (!log.exists()) {
-				log.createNewFile();
-			}
-			
-			FileWriter filewriter = new FileWriter(log);
-			BufferedWriter logwriter = new BufferedWriter(filewriter);
-			
-			logwriter.write(System.currentTimeMillis() + " " + line);
-		}
-		catch (Exception e) {
-			log(e.getStackTrace().toString());
 		}
 	}
 
