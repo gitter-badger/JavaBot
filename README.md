@@ -21,7 +21,7 @@ Contents of this bot is as such:
 Files in root directory:         
 config.txt - Configuration, refer to config.txt.template               
 humor.txt - Humor (add anything you want)     
-log4j.properties - log4j properties config file, edit only if you are experienced.                 
+log4j.properties - log4j properties config file, edit only if you are experienced.                
 
 =========================================================================
 
