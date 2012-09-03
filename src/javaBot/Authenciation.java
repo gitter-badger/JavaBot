@@ -36,7 +36,7 @@ public class Authenciation {
 			}
 		}
 		catch (final Exception e) {
-			bot.log(e.getStackTrace().toString());
+			bot.logException(e);
 		}
 
 		if (users.size() <= 0) {
@@ -64,18 +64,25 @@ public class Authenciation {
 					users.add(dbreader.getRec().getString("username"));
 					passwords.add(dbreader.getRec().getString("password"));
 				}
-			}
-			catch (final Exception e) {
-				bot.log(e.getStackTrace().toString());
-			}
+				
+				if (users.contains(user)) {
+					final int index = users.indexOf(user);
 
-			if (users.contains(user)) {
-				final int index = users.indexOf(user);
-
-				if (passwordEncryptor.checkPassword(password, passwords.get(index))) {
-					JavaBot.AUTHENCIATED.add(Authenciation.sender);
-					Authenciation.bot.notice(Authenciation.sender,
-					        "You have been authenciated.");
+					if (passwordEncryptor.checkPassword(password, passwords.get(index))) {
+						JavaBot.AUTHENCIATED.add(Authenciation.sender);
+						Authenciation.bot.notice(Authenciation.sender,
+						        "You have been authenciated.");
+					}
+					else {
+						try {
+							Thread.sleep(JavaBot.getAuthenciationDelay());
+						}
+						catch (final Exception e) {
+							bot.log(e.getStackTrace().toString());
+						}
+						Authenciation.bot.notice(Authenciation.sender,
+						        "Password and username pair does not match.");
+					}
 				}
 				else {
 					try {
@@ -84,27 +91,24 @@ public class Authenciation {
 					catch (final Exception e) {
 						bot.log(e.getStackTrace().toString());
 					}
+
 					Authenciation.bot.notice(Authenciation.sender,
 					        "Password and username pair does not match.");
 				}
-			}
-			else {
-				try {
-					Thread.sleep(JavaBot.getAuthenciationDelay());
-				}
-				catch (final Exception e) {
-					bot.log(e.getStackTrace().toString());
-				}
 
-				Authenciation.bot.notice(Authenciation.sender,
-				        "Password and username pair does not match.");
+				user = "";
+				password = "";
+				for (int i = 0; i < users.size(); i++) {
+					users.remove(i);
+					passwords.remove(i);
+				}
 			}
-
-			user = "";
-			password = "";
-			for (int i = 0; i < users.size(); i++) {
-				users.remove(i);
-				passwords.remove(i);
+			catch (final NullPointerException e1) {
+				bot.log("users.odb cannot be accessed.");
+				bot.logException(e1, sender);
+			}
+			catch (final Exception e2) {
+				bot.logException(e2, sender);
 			}
 		}
 

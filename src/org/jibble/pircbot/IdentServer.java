@@ -55,7 +55,8 @@ public class IdentServer extends Thread {
 			this._ss.setSoTimeout(60000);
 		}
 		catch (final Exception e) {
-			this._bot.log("*** Could not start the ident server on port 113.");
+			this._bot.log("*** Could not start the ident server on port 113.", PircBot.ERROR);
+			this._bot.logException(e);
 			return;
 		}
 

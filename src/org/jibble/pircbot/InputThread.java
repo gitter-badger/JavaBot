@@ -3,10 +3,7 @@ package org.jibble.pircbot;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InterruptedIOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.Socket;
-import java.util.StringTokenizer;
 
 /**
  * A Thread which reads lines from the IRC server. It then passes these lines to
@@ -82,30 +79,8 @@ public class InputThread extends Thread {
 						try {
 							this._bot.handleLine(line);
 						}
-						catch (final Throwable t) {
-							// Stick the whole stack trace into a String so we
-							// can output it nicely.
-							final StringWriter sw = new StringWriter();
-							final PrintWriter pw = new PrintWriter(sw);
-							t.printStackTrace(pw);
-							pw.flush();
-							final StringTokenizer tokenizer = new StringTokenizer(
-							        sw.toString(), "\r\n");
-							synchronized (this._bot) {
-								this._bot
-								        .log("### Your implementation of PircBot is faulty and you have");
-								this._bot
-								        .log("### allowed an uncaught Exception or Error to propagate in your");
-								this._bot
-								        .log("### code. It may be possible for PircBot to continue operating");
-								this._bot
-								        .log("### normally. Here is the stack trace that was produced: -");
-								this._bot.log("### ");
-								while (tokenizer.hasMoreTokens()) {
-									this._bot.log("### "
-									        + tokenizer.nextToken());
-								}
-							}
+						catch (final Exception e) {
+							this._bot.logException(e);
 						}
 					}
 					if (line == null) {

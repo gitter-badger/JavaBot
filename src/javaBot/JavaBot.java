@@ -5,6 +5,8 @@ package javaBot;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
@@ -66,7 +68,7 @@ public class JavaBot extends PircBot implements Runnable {
 			}
 		}
 		catch (Exception e) {
-			log(e.getStackTrace().toString());
+			logException(e);
 		}
 
 		JavaBot.NAME = JavaBot.getConfig("nick");
@@ -107,11 +109,11 @@ public class JavaBot extends PircBot implements Runnable {
 				bot.connect(JavaBot.SERVER);
 			}
 			catch (final Exception e2) {
-				log(e.getStackTrace().toString());;
+				logException(e2);
 			}
 		}
 		catch (final Exception e) {
-			log(e.getStackTrace().toString());;
+			logException(e);
 		}
 
 		bot.identify(JavaBot.PASSWORD);
@@ -122,7 +124,7 @@ public class JavaBot extends PircBot implements Runnable {
 			Thread.sleep(1000);
 		}
 		catch (final InterruptedException e1) {
-			log(e1.getStackTrace().toString());
+			logException(e1);
 		}
 
 		for (final String element : JavaBot.CHANNEL_ARRAY) {
@@ -131,19 +133,19 @@ public class JavaBot extends PircBot implements Runnable {
 	}
 
 	@Override
-	protected void onMessage(String CHANNEl, String sender, String login, String hostname, 
+	protected void onMessage(String channel, String sender, String login, String hostname, 
 		String message) {
 		if (message.startsWith(JavaBot.getPrefix())) {
 			try {
-				new Commands(this, sender, login, CHANNEl, hostname, message).run();
+				new Commands(this, sender, login, channel, hostname, message).run();
 			}
 			catch (final MalformedURLException e) {
-				log(e.getStackTrace().toString());;
+				logException(e, sender);
 			}
 		}
 
-		new Security(this, CHANNEl, sender, message, hostname).run();
-		new FloodPreventor(this, CHANNEl, sender, message, JavaBot.FLOOD_DURATION, 
+		new Security(this, channel, sender, message, hostname).run();
+		new FloodPreventor(this, channel, sender, message, JavaBot.FLOOD_DURATION, 
 			JavaBot.MESSAGE_LIMIT, JavaBot.THROTTLED_TIME).run();
 	}
 
@@ -156,31 +158,31 @@ public class JavaBot extends PircBot implements Runnable {
 				new Authenciation(this, sender, message).run();
 			}
 			catch (final MalformedURLException e) {
-				log(e.getStackTrace().toString());;
+				logException(e, sender);
 			}
 		}
 	}
 
 	@Override
-	protected void onKick(String CHANNEl, String kickerNick,
+	protected void onKick(String channel, String kickerNick,
 	        String kickerLogin, String kickerHostname, String recipientNick,
 	        String reason) {
 		if (JavaBot.PROTECT_MODE) {
 			if (recipientNick.equals(JavaBot.NAME)
 			        && !kickerNick.equals("ChanServ")) {
-				this.joinChannel(CHANNEl);
+				this.joinChannel(channel);
 
 				final StringBuffer kicker = new StringBuffer(kickerHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(CHANNEl, kicker.toString());
-				this.kick(CHANNEl, kickerNick);
+				this.ban(channel, kicker.toString());
+				this.kick(channel, kickerNick);
 			}
 		}
 	}
 
 	@Override
-	protected void onSetChannelBan(String CHANNEl, String sourceNick,
+	protected void onSetChannelBan(String channel, String sourceNick,
 	        String sourceLogin, String sourceHostname, String hostmask) {
 		if (JavaBot.PROTECT_MODE) {
 			if (hostmask.equals("*!*@*") && !sourceNick.equals("ChanServ")) {
@@ -188,44 +190,39 @@ public class JavaBot extends PircBot implements Runnable {
 				final StringBuffer kicker = new StringBuffer(sourceHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(CHANNEl, kicker.toString());
-				this.kick(CHANNEl, sourceNick);
-				this.unBan(CHANNEl, "*!*@*");
+				this.ban(channel, kicker.toString());
+				this.kick(channel, sourceNick);
+				this.unBan(channel, "*!*@*");
 
 				try {
 					Thread.sleep(1000);
 				}
 				catch (final InterruptedException e) {
-					log(e.getStackTrace().toString());;
+					logException(e, channel);
 				}
-
-				this.setMode(CHANNEl, "-il");
 			}
 			else if (hostmask.contains("JavaBot")
 			        && !sourceNick.equals("ChanServ")) {
 
-				this.sendMessage("ChanServ", "recover " + CHANNEl);
+				this.sendMessage("ChanServ", "recover " + channel);
 
 				final StringBuffer kicker = new StringBuffer(sourceHostname);
 
 				kicker.insert(0, "!*@*");
-				this.ban(CHANNEl, kicker.toString());
-				this.kick(CHANNEl, sourceNick);
+				this.ban(channel, kicker.toString());
+				this.kick(channel, sourceNick);
 				try {
 					Thread.sleep(1000);
 				}
 				catch (final InterruptedException e) {
-					log(e.getStackTrace().toString());;
+					logException(e, channel);
 				}
-
-				this.setMode(CHANNEl, "-il");
 			}
 		}
 	}
 
 	@Override
 	protected void onDisconnect() {
-		// Cleaning up
 
 		System.exit(0);
 	}
@@ -269,6 +266,19 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 	}
 	
+	public void logException(Exception e, String target) {
+		this.logException(e);
+		
+		if (e.getMessage() == null) {
+			
+			this.notice(target, e.getClass().getName()); 
+			this.notice(target, "Please report to the botmaster.");
+		}
+		else {
+			this.notice(target, e.getMessage() + " - Please report to the botmaster.");
+		}
+	}
+	
 	private static String getConfig(String parameter) {
 		if (JavaBot.configNameArray.contains(parameter)) { 
 			return JavaBot.configArray.get(JavaBot.configNameArray.indexOf(parameter));
@@ -279,7 +289,6 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 	}
 
-	// Getter methods
 	public static String getBotName() {
 		return JavaBot.NAME;
 	}

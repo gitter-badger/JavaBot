@@ -4,8 +4,12 @@ package javaBot.tools;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
+
+import org.jibble.pircbot.PircBot;
 
 public class htmlParser {
 	public static String[] readWebsite(String urlString) {
@@ -25,7 +29,11 @@ public class htmlParser {
 			in.close();
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stacktrace = sw.toString();
+			
+			PircBot.logger.error(stacktrace);
 		}
 
 		return array.toArray(new String[array.size()]);

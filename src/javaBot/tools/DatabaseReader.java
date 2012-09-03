@@ -4,8 +4,11 @@ package javaBot.tools;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -17,6 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.hsqldb.jdbcDriver;
+import org.jibble.pircbot.PircBot;
 
 public class DatabaseReader {
 	private Statement	 com	= null;
@@ -107,7 +111,11 @@ public class DatabaseReader {
 			        + this.f.getName(), "SA", ""));
 		}
 		catch (final Exception e) {
-			e.printStackTrace();
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			String stacktrace = sw.toString();
+			
+			PircBot.logger.error(stacktrace);
 		}
 	}
 

@@ -1,5 +1,6 @@
 package javaBot;
 
+
 public class Security {
 	JavaBot	bot;
 	String	channel;
@@ -49,10 +50,8 @@ public class Security {
 				Thread.sleep(1000);
 			}
 			catch (final InterruptedException e) {
-				bot.log(e.getStackTrace().toString());
+				bot.logException(e, channel);
 			}
-
-			this.bot.setMode(this.channel, "-il");
 		}
 	}
 }

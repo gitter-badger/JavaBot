@@ -81,7 +81,7 @@ public class OutputThread extends Thread {
 			}
 		}
 		catch (final InterruptedException e) {
-			// Just let the method return naturally...
+			this._bot.logException(e);
 		}
 	}
 

@@ -11,7 +11,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.InetAddress;
@@ -77,7 +79,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	/**
 	 * Logger of log4j.
 	 */
-	public Logger logger = Logger.getLogger(PircBot.class);
+	public static Logger logger = Logger.getLogger(PircBot.class);
 
 	/**
 	 * Constructs a PircBot with the default settings. Your own constructors in
@@ -93,7 +95,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 		
 		PropertyConfigurator.configure("files/log4j.properties");
 		
-		this.logger.setLevel(Level.INFO);
+		PircBot.logger.setLevel(Level.INFO);
 		
 		log("     ");
 		log("     ");
@@ -267,7 +269,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 				}
 			}
 			catch (final IOException ee) {
-				// ignore
+				//ignore
 			}
 			throw e;
 		}
@@ -896,11 +898,40 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 * 
 	 * @see org.jibble.pircbot.PircBotLogger#log(java.lang.String)
 	 */
-	@Override
 	public void log(String line) {
-		if (this._verbose) {
+		if (PircBot._verbose) {
 			logger.info(line);
 		}
+	}
+	
+	final public static String ERROR = "ERROR";
+	final public static String DEBUG = "DEBUG";
+	final public static String FATAL = "FATAL";
+	final public static String WARN = "WARN";
+	
+	public void log(String line, String type) {
+		if (PircBot._verbose) {
+			if (type.equals(ERROR)) {
+				logger.error(line);
+			}
+			else if (type.equals(DEBUG)) {
+				logger.debug(line);
+			}
+			else if (type.equals(FATAL)) {
+				logger.fatal(line);
+			}
+			else if (type.equals(WARN)) {
+				logger.warn(line);
+			}
+		}
+	}
+	
+	public void logException(Exception e) {
+		StringWriter sw = new StringWriter();
+		e.printStackTrace(new PrintWriter(sw));
+		String stacktrace = sw.toString();
+		
+		log(stacktrace, ERROR);
 	}
 
 	/**
@@ -2652,7 +2683,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 *            true if verbose mode is to be used. Default is false.
 	 */
 	public final void setVerbose(boolean verbose) {
-		this._verbose = verbose;
+		PircBot._verbose = verbose;
 	}
 
 	/**
@@ -2726,7 +2757,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 * @return true if verbose mode is enabled.
 	 */
 	public boolean isVerbose() {
-		return this._verbose;
+		return PircBot._verbose;
 	}
 
 	/**
@@ -3611,7 +3642,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 
 	// Default settings for the PircBot.
 	private boolean	                                 _autoNickChange	= false;
-	private boolean	                                 _verbose	      = false;
+	private static boolean	                                 _verbose	      = false;
 	private String	                                 _name	          = "PircBotPPF";
 	private String	                                 _nick	          = this._name;
 	private String	                                 _login	          = "PircBotPPF";
