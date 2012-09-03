@@ -1,7 +1,7 @@
 JavaBot-IRC
 ===========
-An IRC bot, designed for simplicity and customizability.
-===========
+
+An IRC bot, designed for simplicity and customizability.                     
 
 Contents of this bot is as such:         
 1. JavaBot          
@@ -16,25 +16,19 @@ Contents of this bot is as such:
 7. log4j
 5. Spring
 
-(Don't worry, all are open source)                             
-
-Files in root directory:         
-config.txt - Configuration, refer to config.txt.template               
-humor.txt - Humor (add anything you want)     
-log4j.properties - log4j properties config file, edit only if you are experienced.                
-
-=========================================================================
+(Don't worry, all are open source)                                        
 
 1. Configure this bot.       
                 
-Edit the config file, "config.txt.template". Channels are seperated by spaces.         
+Edit the config file, "config.txt.template". Channels are seperated by spaces.          
 Make sure you use a registered nick and that you have access to that nick.          
 An utility to configure the config file will be coming soon.   
 
 All commands will require the prefix you set in the config file.    
 
-Once you're done with the configuration, rename files/config.txt.template to config.txt,                 
-database/users.odb.template to users.odb and etc.
+Once you're done with the configuration, rename:                      
+files/config.txt.template -> config.txt                       
+database/users.odb.template -> users.odb            
          
 2. Running this bot         
          
@@ -56,8 +50,8 @@ Make sure OpenOffice Base/LibreOffice Base is installed. An utility to run SQL t
 Open up /database/users.odb and open table "users"         
          
 Enter a suitable ID (since it is the primary key, do not include a duplicate ID. Increment the largest ID. 
-For example, if the largest ID is 5, just use 6.) into the ID field, enter "blahblahblah" into the username 
-field and enter "blahblahblah" into the password field.         
+For example, if the largest ID is 5, just use 6.) into the ID field, enter the 2nd parameter into the username 
+field and enter the 3rd parameter into the password field.         
          
 Now, authenciation is secured. You can log in through:         
 login [your chosen username without brackets, may not be your nick] [password]"         
