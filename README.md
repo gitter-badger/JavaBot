@@ -25,12 +25,16 @@ log4j.properties - log4j properties config file, edit only if you are experience
 
 =========================================================================
 
-1. Configure this bot.         
-Simply edit the config file, "config.txt" and edit them to your delight. Channels are seperated by spaces.         
+1. Configure this bot.       
+                
+Edit the config file, "config.txt.template". Channels are seperated by spaces.         
 Make sure you use a registered nick and that you have access to that nick.          
 An utility to configure the config file will be coming soon.   
 
-All commands will require the prefix you set in the config file.      
+All commands will require the prefix you set in the config file.    
+
+Once you're done with the configuration, rename files/config.txt.template to config.txt,                 
+database/users.odb.template to users.odb and etc.
          
 2. Running this bot         
          
