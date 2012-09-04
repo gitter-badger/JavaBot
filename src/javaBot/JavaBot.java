@@ -5,12 +5,14 @@ package javaBot;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
+import javax.net.ssl.SSLException;
+import javax.net.ssl.SSLSocketFactory;
+
+import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
@@ -25,26 +27,30 @@ import wei2912.utilities.Generator;
 /** JavaBot main class */
 public class JavaBot extends PircBot implements Runnable {
 
+	// CONFIG VARIABLES \\
 	private static String CHANNEL = "";
 	private static long DELAY = 0;
 	private static String NAME = "";
-	private static String PASSWORD = "";
+	private static String NICKSERV_PASSWORD = "";
+	private static String SERVER_PASSWORD = "";
 	private static String PREFIX = "";
 	private static String SERVER = "";
-	static String[] CHANNEL_ARRAY;
-
-	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>();
-
-	static boolean CYCLE = false;
-
+	
+	private static int PORT = 6667;
+	private static boolean SSL = false;
+	
 	private static long	FLOOD_DURATION = 0;
 	private static long	THROTTLED_TIME = 0;
 	private static long	MESSAGE_LIMIT = 0;
 
 	private static boolean PROTECT_MODE = false;
-
+	
 	private static long AUTHENCIATION_DELAY = 0;
-
+	// CONFIG VARIABLES \\
+	
+	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>();
+	static String[] CHANNEL_ARRAY;
+	static boolean CYCLE = false;
 	String line	              = null;
 	static ArrayList<String>	               configArray	      = new ArrayList<String>();
 	static ArrayList<String>	               configNameArray	  = new ArrayList<String>();
@@ -75,9 +81,15 @@ public class JavaBot extends PircBot implements Runnable {
 		JavaBot.NAME = JavaBot.getConfig("nick");
 		JavaBot.SERVER = JavaBot.getConfig("server");
 		JavaBot.CHANNEL = JavaBot.getConfig("channels");
-		JavaBot.PASSWORD = JavaBot.getConfig("password");
+		JavaBot.NICKSERV_PASSWORD = JavaBot.getConfig("nickserv_password");
+		
+		JavaBot.SERVER_PASSWORD = JavaBot.getConfig("server_password");
+		
 		JavaBot.PREFIX = JavaBot.getConfig("prefix");
 		JavaBot.DELAY = Long.parseLong(JavaBot.getConfig("messageDelay"));
+		
+		JavaBot.PORT = Integer.parseInt(JavaBot.getConfig("port"));
+		JavaBot.SSL = Boolean.parseBoolean(JavaBot.getConfig("sslConnection"));
 		
 		JavaBot.FLOOD_DURATION = Long.parseLong(JavaBot.getConfig("floodDuration"));
 		JavaBot.THROTTLED_TIME = Long.parseLong(JavaBot.getConfig("throttledTime"));
@@ -101,13 +113,13 @@ public class JavaBot extends PircBot implements Runnable {
 		bot.setVerbose(true);
 
 		try {
-			bot.connect(JavaBot.SERVER);
+			bot.connectServer();
 		}
 		catch (final NickAlreadyInUseException e) {
-			JavaBot.NAME = JavaBot.NAME + Math.abs(Generator.generateInt());
+			JavaBot.NAME = JavaBot.NAME + Math.abs(Generator.generateInt(1000,9999));
 			bot.setName(JavaBot.NAME);
 			try {
-				bot.connect(JavaBot.SERVER);
+				bot.connectServer();
 			}
 			catch (final Exception e2) {
 				logException(e2);
@@ -117,7 +129,7 @@ public class JavaBot extends PircBot implements Runnable {
 			logException(e);
 		}
 
-		bot.identify(JavaBot.PASSWORD);
+		bot.identify(JavaBot.NICKSERV_PASSWORD);
 		
 		bot.sendRawLine("MODE "+JavaBot.getBotName()+" +B");
 		
@@ -130,6 +142,25 @@ public class JavaBot extends PircBot implements Runnable {
 
 		for (final String element : JavaBot.CHANNEL_ARRAY) {
 			bot.joinChannel(element);
+		}
+	}
+	
+	public void connectServer() throws SSLException, IOException, IrcException {
+		if (JavaBot.SSL) {
+			if (JavaBot.SERVER_PASSWORD.equalsIgnoreCase("null")) {
+				this.connect(JavaBot.SERVER, JavaBot.PORT, null, SSLSocketFactory.getDefault());
+			}
+			else {
+				this.connect(JavaBot.SERVER, JavaBot.PORT, JavaBot.SERVER_PASSWORD, SSLSocketFactory.getDefault());
+			}
+		}
+		else {
+			if (JavaBot.SERVER_PASSWORD.equalsIgnoreCase("null")) {
+				this.connect(JavaBot.SERVER, JavaBot.PORT, null, null);
+			}
+			else {
+				this.connect(JavaBot.SERVER, JavaBot.PORT, JavaBot.SERVER_PASSWORD, null);
+			}
 		}
 	}
 
@@ -278,10 +309,6 @@ public class JavaBot extends PircBot implements Runnable {
 		return JavaBot.NAME;
 	}
 
-	public static String getCHANNEl() {
-		return JavaBot.CHANNEL;
-	}
-
 	public static long getDelay() {
 		return JavaBot.DELAY;
 	}
@@ -294,8 +321,16 @@ public class JavaBot extends PircBot implements Runnable {
 		return JavaBot.SERVER;
 	}
 
-	protected static long getAuthenciationDelay() {
+	public static long getAuthenciationDelay() {
 		return JavaBot.AUTHENCIATION_DELAY;
+	}
+	
+	public static int getPortNumber() {
+		return JavaBot.PORT;
+	}
+	
+	public static boolean ifSslConnection() {
+		return JavaBot.SSL;
 	}
 
 	public static boolean getProtectMode() {

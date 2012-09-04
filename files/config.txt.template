@@ -1,9 +1,16 @@
 nick = JavaBot
 server = card.freenode.net
 channels = #javabot
-password = SET ACCORDING
+nickserv_password = SET ACCORDINGLY
+
+# server_password can be set to "null" if there is none
+server_password = null
+
 prefix = #
 messageDelay = 0
+
+port = 6667
+sslConnection = false
 
 # FloodPreventor
 floodDuration = 10000
