@@ -101,16 +101,16 @@ They are located at /logs/log_TIMESTAMP.txt
 
 ### Change log ###
 
-##Version 1.0.0 ## 
+## Version 1.0.0 
 - First build of JavaBot! 
 
-## Version 1.1.0 ## 
+## Version 1.1.0 
 - Added advanced spam filters 
   - kicks if a person types >x messages in y seconds 
 	- kicks if a person types messages longer than y characters 
 	- kicks if a person joins that has a similar name to another person.
 
-## Version 1.2.1 ## 
+## Version 1.2.1
 - Removed buggy spam filters. 
 - Added games (commands with the prefix !) 
 - Modularised the code 
@@ -118,13 +118,13 @@ They are located at /logs/log_TIMESTAMP.txt
 - Bug fixes 
 - Less flooding.
 
-## Version 1.3.0 ##
+## Version 1.3.0
 - Major upgrade!
 
 - Added hangman game
 - Added NLP implementation with training mode.
 
-## Version 1.4.0 ##
+## Version 1.4.0
 - Major upgrade!
 
 - Added plugin functionality and many plugins
@@ -133,3 +133,10 @@ They are located at /logs/log_TIMESTAMP.txt
 - Added flood protection (less buggy now, extremely stable)
 - Added channel protection mode
 - New config file
+
+## Version 1.5.0 - Alpha
+- Major upgrade!
+
+- Lessened memory usage by reducing number of threads
+- Cleaned up code
+- Changed logging system to log4j - Much more versatile
