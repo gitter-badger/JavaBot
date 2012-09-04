@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
@@ -167,11 +168,12 @@ public class JavaBot extends PircBot implements Runnable {
 	protected void onKick(String channel, String kickerNick,
 	        String kickerLogin, String kickerHostname, String recipientNick,
 	        String reason) {
-		if (JavaBot.PROTECT_MODE) {
-			if (recipientNick.equals(JavaBot.NAME)
-			        && !kickerNick.equals("ChanServ")) {
-				this.joinChannel(channel);
+		
+		if (recipientNick.equals(JavaBot.NAME) && 
+			!kickerNick.equals("ChanServ")) {
+			this.joinChannel(channel);
 
+			if (JavaBot.PROTECT_MODE) {
 				final StringBuffer kicker = new StringBuffer(kickerHostname);
 
 				kicker.insert(0, "!*@*");
@@ -184,40 +186,23 @@ public class JavaBot extends PircBot implements Runnable {
 	@Override
 	protected void onSetChannelBan(String channel, String sourceNick,
 	        String sourceLogin, String sourceHostname, String hostmask) {
-		if (JavaBot.PROTECT_MODE) {
-			if (hostmask.equals("*!*@*") && !sourceNick.equals("ChanServ")) {
+		
+		String newhostmask = hostmask.replace("*!*", ".*");
+			   newhostmask = newhostmask.replaceAll("[^\\.]*", "\\.*");
+			
+		if (("*!*@JavaBot".matches(newhostmask) ||
+			 "*!*PircBotPPF@JavaBot".matches(newhostmask)) && 
+			!sourceNick.equals("ChanServ")) {
 
+			if (JavaBot.PROTECT_MODE) {
 				final StringBuffer kicker = new StringBuffer(sourceHostname);
 
-				kicker.insert(0, "!*@*");
+				kicker.insert(0, "	");
 				this.ban(channel, kicker.toString());
 				this.kick(channel, sourceNick);
-				this.unBan(channel, "*!*@*");
-
-				try {
-					Thread.sleep(1000);
-				}
-				catch (final InterruptedException e) {
-					logException(e, channel);
-				}
 			}
-			else if (hostmask.contains("JavaBot")
-			        && !sourceNick.equals("ChanServ")) {
-
-				this.sendMessage("ChanServ", "recover " + channel);
-
-				final StringBuffer kicker = new StringBuffer(sourceHostname);
-
-				kicker.insert(0, "!*@*");
-				this.ban(channel, kicker.toString());
-				this.kick(channel, sourceNick);
-				try {
-					Thread.sleep(1000);
-				}
-				catch (final InterruptedException e) {
-					logException(e, channel);
-				}
-			}
+				
+			this.unBan(channel, hostmask);
 		}
 	}
 
@@ -311,6 +296,10 @@ public class JavaBot extends PircBot implements Runnable {
 
 	protected static long getAuthenciationDelay() {
 		return JavaBot.AUTHENCIATION_DELAY;
+	}
+
+	public static boolean getProtectMode() {
+		return PROTECT_MODE;
 	}
 }
 

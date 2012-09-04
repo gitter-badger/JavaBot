@@ -911,17 +911,20 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	
 	public void log(String line, String type) {
 		if (PircBot._verbose) {
-			if (type.equals(ERROR)) {
+			if (type.equals(PircBot.ERROR)) {
 				logger.error(line);
 			}
-			else if (type.equals(DEBUG)) {
+			else if (type.equals(PircBot.DEBUG)) {
 				logger.debug(line);
 			}
-			else if (type.equals(FATAL)) {
+			else if (type.equals(PircBot.FATAL)) {
 				logger.fatal(line);
 			}
-			else if (type.equals(WARN)) {
+			else if (type.equals(PircBot.WARN)) {
 				logger.warn(line);
+			}
+			else {
+				logger.info(line);
 			}
 		}
 	}

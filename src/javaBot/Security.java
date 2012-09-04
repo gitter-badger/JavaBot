@@ -18,39 +18,29 @@ public class Security {
 	}
 
 	public void run() {
-
-		/** Security - checks messages sent */
 		if (this.message.startsWith("!kick") && this.message.endsWith(JavaBot.getBotName())) {
-
-			// If get kicked by chanserv from another user
 			this.bot.joinChannel(this.channel);
 
-			// For a better ban
-			final StringBuffer kicker = new StringBuffer(this.hostname);
+			if (JavaBot.getProtectMode()) {
+				StringBuffer kicker = new StringBuffer(this.hostname);
 
-			kicker.insert(0, "!*@*");
-			this.bot.ban(this.channel, kicker.toString());
-			this.bot.kick(this.channel, this.sender);
+				kicker.insert(0, "!*@*");
+				this.bot.ban(this.channel, kicker.toString());
+				this.bot.kick(this.channel, this.sender);
+			}
 		}
 		else if (this.message.startsWith("!ban")
 		        && this.message.endsWith(JavaBot.getBotName())) {
 
-			// If get kicked by chanserv from another user
-			this.bot.sendMessage("ChanServ", "recover " + this.channel);
+			this.bot.sendMessage("ChanServ", "unban " + JavaBot.getBotName() + "!*@*");
 			this.bot.joinChannel(this.channel);
 
-			// For a better ban
-			final StringBuffer kicker = new StringBuffer(this.hostname);
+			if (JavaBot.getProtectMode()) {
+				StringBuffer kicker = new StringBuffer(this.hostname);
 
-			kicker.insert(0, "!*@*");
-			this.bot.ban(this.channel, kicker.toString());
-			this.bot.kick(this.channel, this.sender);
-
-			try {
-				Thread.sleep(1000);
-			}
-			catch (final InterruptedException e) {
-				bot.logException(e, channel);
+				kicker.insert(0, "!*@*");
+				this.bot.ban(this.channel, kicker.toString());
+				this.bot.kick(this.channel, this.sender);
 			}
 		}
 	}
