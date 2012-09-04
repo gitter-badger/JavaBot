@@ -175,7 +175,7 @@ public class User implements Serializable {
 	 */
 	public Object getInfo() {
 		return this._info;
-	}
+	}	
 
 	private String	     _prefix;
 	private final String	_nick;
