@@ -79,7 +79,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	/**
 	 * Logger of log4j.
 	 */
-	public static Logger logger = Logger.getLogger(PircBot.class);
+	private static Logger logger = Logger.getLogger(PircBot.class);
 
 	/**
 	 * Constructs a PircBot with the default settings. Your own constructors in
@@ -117,7 +117,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 */
 	public final synchronized void connect(String hostname) throws IOException,
 	        IrcException, NickAlreadyInUseException {
-		this.connect(hostname, 6667, null);
+		this.connect(hostname, 6667, null, null);
 	}
 
 	/**
@@ -137,7 +137,27 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 */
 	public final synchronized void connect(String hostname, int port)
 	        throws IOException, IrcException, NickAlreadyInUseException {
-		this.connect(hostname, port, null);
+		this.connect(hostname, port, null, null);
+	}
+	
+	/**
+	 * Attempt to connect to the specified IRC server and port number. The
+	 * onConnect method is called upon success.
+	 * 
+	 * @param hostname
+	 *            The hostname of the server to connect to.
+	 * @param port
+	 *            The port number to connect to on the server.
+	 * @throws IOException
+	 *             if it was not possible to connect to the server.
+	 * @throws IrcException
+	 *             if the server would not let us join it.
+	 * @throws NickAlreadyInUseException
+	 *             if our nick is already in use on the server.
+	 */
+	public final synchronized void connect(String hostname, int port, SocketFactory socketFactory)
+	        throws IOException, IrcException, NickAlreadyInUseException {
+		this.connect(hostname, port, null, socketFactory);
 	}
 
 	/**
@@ -158,12 +178,12 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 *             if our nick is already in use on the server.
 	 */
 	public final synchronized void connect(String hostname, int port,
-	        String password) throws IOException, IrcException,
+	        String password, SocketFactory socketFactory) throws IOException, IrcException,
 	        NickAlreadyInUseException {
 
 		this._server = hostname;
 		this._port = port;
-		this._password = password;
+		this._password = password;	
 
 		if (this.isConnected()) { throw new IOException(
 		        "The PircBot is already connected to an IRC server.  Disconnect first."); }
@@ -332,7 +352,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	        IrcException, NickAlreadyInUseException {
 		if (this.getServer() == null) { throw new IrcException(
 		        "Cannot reconnect to an IRC server because we were never connected to one previously!"); }
-		this.connect(this.getServer(), this.getPort(), this.getPassword());
+		this.connect(this.getServer(), this.getPort(), this.getPassword(), this.getSocketFactory());
 	}
 
 	/**
@@ -3661,4 +3681,9 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	private String	                                 _userPrefixOrder	= "@+";
 
 	private final String	                         _channelPrefixes	= "#&+!";
+
+	public static Logger getLogger() {
+		// TODO Auto-generated method stub
+		return logger;
+	}
 }

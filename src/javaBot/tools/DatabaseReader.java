@@ -115,7 +115,7 @@ public class DatabaseReader {
 			e.printStackTrace(new PrintWriter(sw));
 			String stacktrace = sw.toString();
 			
-			PircBot.logger.error(stacktrace);
+			PircBot.getLogger().error(stacktrace);
 		}
 	}
 

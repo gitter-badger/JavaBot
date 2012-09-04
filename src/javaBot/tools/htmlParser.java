@@ -33,7 +33,7 @@ public class htmlParser {
 			e.printStackTrace(new PrintWriter(sw));
 			String stacktrace = sw.toString();
 			
-			PircBot.logger.error(stacktrace);
+			PircBot.getLogger().error(stacktrace);
 		}
 
 		return array.toArray(new String[array.size()]);

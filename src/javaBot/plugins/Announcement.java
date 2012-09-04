@@ -35,8 +35,8 @@ public class Announcement extends javaBotPluginAbstract {
 			}
 
 			final StringBuffer users = new StringBuffer("");
-			final User userList[] = Announcement.bot
-			        .getUsers(Announcement.channel);
+			final User userList[] = Announcement.bot.getUsers(Announcement.channel);
+			
 			for (final User user : userList) {
 				users.append(user.getNick());
 				users.append(" ");
