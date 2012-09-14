@@ -43,10 +43,8 @@ public class FloodPreventor {
 			class removeTimes extends TimerTask {
 				@Override
 				public void run() {
-					if ((FloodPreventor.nicks.size() > 0)
-					        && (index < FloodPreventor.nicks.size())) {
-						if (FloodPreventor.nicks.get(index).equals(
-						        FloodPreventor.sender)) {
+					if (FloodPreventor.nicks.size() > 0) {
+						if (FloodPreventor.nicks.contains(FloodPreventor.sender)) {
 							FloodPreventor.nicks.remove(index);
 							FloodPreventor.times.remove(index);
 						}
@@ -60,7 +58,7 @@ public class FloodPreventor {
 		String victim;
 
 		for (int i = 0; i < FloodPreventor.times.size(); i++) {
-			if (FloodPreventor.times.get(i) >= FloodPreventor.messageLimit) {
+			if (FloodPreventor.times.get(i) > FloodPreventor.messageLimit) {
 				FloodPreventor.bot.deVoice(FloodPreventor.channel,
 				        FloodPreventor.nicks.get(i));
 
