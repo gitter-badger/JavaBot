@@ -24,8 +24,9 @@ public class Commands {
 	String	                  message;
 	String	                  sender;
 	boolean	                  training;
-
-	PluginManager	          pm;
+	
+	public static final JSPFProperties props = new JSPFProperties();
+	public static final PluginManager pm  = PluginManagerFactory.createPluginManager(props);
 
 	Collection<javaBotPlugin>	plugins;
 
@@ -38,16 +39,14 @@ public class Commands {
 		this.message = message;
 		this.login = login;
 
-		final JSPFProperties props = new JSPFProperties();
-
 		props.setProperty(PluginManager.class, "cache.enabled", "true");
-		props.setProperty(PluginManager.class, "cache.file", ".jspf.cache");
+		props.setProperty(PluginManager.class, "cache.mode",    "weak");
+		props.setProperty(PluginManager.class, "cache.file",    "jspf.cache");
 
-		this.pm = PluginManagerFactory.createPluginManager(props);
+		PluginManager pm = PluginManagerFactory.createPluginManager(props);
 
-		this.pm.addPluginsFrom(new File("plugins/").toURI());
-		this.plugins = new PluginManagerUtil(this.pm)
-		        .getPlugins(javaBotPlugin.class);
+		pm.addPluginsFrom(new File("plugins/").toURI());
+		plugins = new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
 	}
 
 	public void run() {

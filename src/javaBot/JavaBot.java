@@ -239,7 +239,7 @@ public class JavaBot extends PircBot implements Runnable {
 
 	@Override
 	protected void onDisconnect() {
-
+		Commands.pm.shutdown(); // Shutdown plugin manager
 		System.exit(0);
 	}
 
