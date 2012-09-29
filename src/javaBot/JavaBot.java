@@ -38,10 +38,6 @@ public class JavaBot extends PircBot implements Runnable {
 	
 	private static int PORT = 6667;
 	private static boolean SSL = false;
-	
-	private static long	FLOOD_DURATION = 0;
-	private static long	THROTTLED_TIME = 0;
-	private static long	MESSAGE_LIMIT = 0;
 
 	private static boolean PROTECT_MODE = false;
 	
@@ -90,10 +86,6 @@ public class JavaBot extends PircBot implements Runnable {
 		
 		JavaBot.PORT = Integer.parseInt(JavaBot.getConfig("port"));
 		JavaBot.SSL = Boolean.parseBoolean(JavaBot.getConfig("sslConnection"));
-		
-		JavaBot.FLOOD_DURATION = Long.parseLong(JavaBot.getConfig("floodDuration"));
-		JavaBot.THROTTLED_TIME = Long.parseLong(JavaBot.getConfig("throttledTime"));
-		JavaBot.MESSAGE_LIMIT = Long.parseLong(JavaBot.getConfig("messageLimit"));
 
 		JavaBot.PROTECT_MODE = Boolean.parseBoolean(JavaBot.getConfig("protectMode"));
 
@@ -177,8 +169,6 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 
 		new Security(this, channel, sender, message, hostname).run();
-		new FloodPreventor(this, channel, sender, message, JavaBot.FLOOD_DURATION, 
-			JavaBot.MESSAGE_LIMIT, JavaBot.THROTTLED_TIME).run();
 	}
 
 	@Override
