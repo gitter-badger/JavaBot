@@ -9,14 +9,7 @@ import javaBot.JavaBot;
 import javaBot.plugins.intl.javaBotPluginAbstract;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
-import org.apache.commons.validator.routines.UrlValidator;
-
 import wei2912.utilities.Generator;
-import de.nava.informa.core.ChannelIF;
-import de.nava.informa.core.ParseException;
-import de.nava.informa.impl.basic.ChannelBuilder;
-import de.nava.informa.impl.basic.Item;
-import de.nava.informa.parsers.FeedParser;
 
 @PluginImplementation
 /** Obtains rss feeds from the LinuxTuts blog, displays tutorials **/
@@ -43,44 +36,7 @@ public class Learn extends javaBotPluginAbstract {
 	}
 
 	public void generate(String query) {
-		Item item = null;
 		final ArrayList<String> array = new ArrayList<String>();
-
-		ChannelIF channel = null;
-		try {
-			channel = FeedParser.parse(new ChannelBuilder(), Learn.url);
-		}
-		catch (final IOException e) {
-			e.printStackTrace();
-		}
-		catch (final ParseException e) {
-			e.printStackTrace();
-		}
-
-		if (channel.getItems().size() == 0) {
-			Learn.bot.notice(Learn.sender,
-			        "Link is invalid, please report to the botmaster. The link is: "
-			                + Learn.url);
-		}
-		else {
-			for (int i = 0; i < channel.getItems().size(); i++) {
-				item = (Item) channel.getItems().toArray()[i];
-
-				final UrlValidator urlValidator = new UrlValidator();
-
-				if (RSSfilter.isMatching(item, query)) {
-					if (!array.contains(item.getTitle() + " (" + item.getLink()
-					        + ")")
-					        && urlValidator.isValid(item.getLink().toString())) { // Checks
-						                                                          // if
-						                                                          // link
-						                                                          // is
-						                                                          // valid
-						array.add(item.getTitle() + " (" + item.getLink() + ")");
-					}
-				}
-			}
-		}
 
 		if (array.size() == 0) {
 			Learn.bot.notice(Learn.sender, "No RSS item can be found.");
@@ -93,10 +49,7 @@ public class Learn extends javaBotPluginAbstract {
 }
 
 class RSSfilter {
-	public static boolean isMatching(Item item, String regex) {
-		String title = item.getTitle();
-		String description = item.getDescription();
-
+	public static boolean isMatching(String title, String description, String regex) {
 		title = title.toLowerCase();
 		regex = regex.toLowerCase();
 		description = description.toLowerCase();
