@@ -2,13 +2,11 @@ package javaBot.plugins;
 
 // ~--- non-JDK imports --------------------------------------------------------
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javaBot.JavaBot;
 import javaBot.plugins.intl.javaBotPluginAbstract;
 import net.xeoh.plugins.base.annotations.PluginImplementation;
-
 import wei2912.utilities.Generator;
 
 @PluginImplementation
