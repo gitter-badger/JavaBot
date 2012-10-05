@@ -47,7 +47,7 @@ public class Humor extends javaBotPluginAbstract {
 	@Override
 	public void run() {
 		if (Humor.message.equalsIgnoreCase(JavaBot.getPrefix() + "humor")) {
-			final int a = Generator.generateInt(0, Humor.humorArray.size() - 1);
+			final int a = new Generator().nextInt(0, Humor.humorArray.size() - 1);
 			Humor.bot.notice(Humor.sender, Humor.humorArray.get(a));
 		}
 	}

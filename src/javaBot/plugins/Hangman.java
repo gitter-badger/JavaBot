@@ -258,7 +258,7 @@ public class Hangman extends javaBotPluginAbstract {
 				words.add(Hangman.dbreader.getRec().getString("word"));
 			}
 
-			int random = Generator.generateInt(0, words.size() - 1);    // To be
+			int random = new Generator().nextInt(0, words.size() - 1);    // To be
 			                                                         // used
 			                                                         // after
 			                                                         // the
@@ -281,7 +281,7 @@ public class Hangman extends javaBotPluginAbstract {
 
 			// Adaptive difficulty
 			do {
-				random = Generator.generateInt(0, words.size() - 1);
+				random = new Generator().nextInt(0, words.size() - 1);
 				Hangman.word = words.get(random).toLowerCase();
 				Hangman.lives = Integer.parseInt(lives.get(random));
 			}

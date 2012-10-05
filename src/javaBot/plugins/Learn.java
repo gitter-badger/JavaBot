@@ -2,22 +2,20 @@ package javaBot.plugins;
 
 // ~--- non-JDK imports --------------------------------------------------------
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
+
+import javaBot.JavaBot;
+import javaBot.plugins.intl.javaBotPluginAbstract;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import net.xeoh.plugins.base.annotations.PluginImplementation;
+
 import org.w3c.dom.Document;
 
-import javaBot.JavaBot;
-import javaBot.plugins.intl.javaBotPluginAbstract;
-import net.xeoh.plugins.base.annotations.PluginImplementation;
 import wei2912.utilities.Generator;
 
 @PluginImplementation
@@ -37,7 +35,7 @@ public class Learn extends javaBotPluginAbstract {
 		Learn.message = message;
 		
 		try {
-			Learn.url = new URL("http://feeds.feedburner.com/sytes/rBaL?format=xml");
+			Learn.url = new URL("http://feeds.feedburner.com/newlinuxtuts?format=xml");
 		} catch (MalformedURLException e) {
 			bot.logException(e);
 		}
@@ -46,13 +44,13 @@ public class Learn extends javaBotPluginAbstract {
 	@Override
 	public void run() {
 		if (Learn.message.equalsIgnoreCase(JavaBot.getPrefix() + "learn")) {
-			this.generate(".*");
+			this.generate();
 		}
 	}
 
-	public void generate(String query) {
-		final ArrayList<String> array = new ArrayList<String>();
+	public void generate() {
 		Document doc = null;
+		ArrayList<String> array = new ArrayList<String>();
 		
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -64,26 +62,23 @@ public class Learn extends javaBotPluginAbstract {
 		}
 		
 		 for (javaxt.rss.Feed feed : new javaxt.rss.Parser(doc).getFeeds()) {
-			 //TODO add parser here which will add to array.
+		     for (javaxt.rss.Item item : feed.getItems()) {
+		    	 StringBuffer string = new StringBuffer("");
+		    	 
+		    	 string.append("["+item.getTitle()+"]");
+		    	 string.append(" "+item.getLink().toString());
+		    	 
+		    	 array.add(string.toString());
+		     }
 		 }
 
 		if (array.size() == 0) {
 			Learn.bot.notice(Learn.sender, "No RSS item can be found.");
 		}
 		else {
-			Learn.bot.notice(Learn.sender, array.get(Generator.generateInt(0, array.size() - 1)));
+			int random = new Generator().nextInt(0, array.size() - 1);
+			Learn.bot.notice(Learn.sender, array.get(random));
 		}
-	}
-
-	public static boolean isMatching(String title, String description, String regex) {
-		title = title.toLowerCase();
-		regex = regex.toLowerCase();
-		description = description.toLowerCase();
-
-		if (title.matches(".*" + regex + ".*")
-		        || description.contains(".*" + regex + ".*")) { return true; }
-
-		return false;
 	}
 }
 

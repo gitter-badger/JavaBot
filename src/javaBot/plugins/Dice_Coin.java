@@ -23,7 +23,7 @@ public class Dice_Coin extends javaBotPluginAbstract {
 	@Override
 	public void run() {
 		if (Dice_Coin.message.equalsIgnoreCase(JavaBot.getPrefix() + "flip")) {
-			final int side = Generator.generateInt(0, 1);
+			final int side = new Generator().nextInt(0, 1);
 
 			if (side == 0) {
 				Dice_Coin.bot
@@ -37,7 +37,7 @@ public class Dice_Coin extends javaBotPluginAbstract {
 		else if (Dice_Coin.message.equalsIgnoreCase(JavaBot.getPrefix()
 		        + "roll")) {
 			Dice_Coin.bot.notice(Dice_Coin.sender, "Number rolled is "
-			        + Generator.generateInt(1, 6));
+			        + new Generator().nextInt(1, 6));
 		}
 	}
 

@@ -108,7 +108,7 @@ public class JavaBot extends PircBot implements Runnable {
 			bot.connectServer();
 		}
 		catch (final NickAlreadyInUseException e) {
-			JavaBot.NAME = JavaBot.NAME + Math.abs(Generator.generateInt(1000,9999));
+			JavaBot.NAME = JavaBot.NAME + Math.abs(new Generator().nextInt(1000,9999));
 			bot.setName(JavaBot.NAME);
 			try {
 				bot.connectServer();
