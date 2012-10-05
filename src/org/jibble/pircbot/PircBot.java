@@ -80,6 +80,8 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	 * Logger of log4j.
 	 */
 	private static Logger logger = Logger.getLogger(PircBot.class);
+	
+	private static boolean _privMsgVerbose = false;
 
 	/**
 	 * Constructs a PircBot with the default settings. Your own constructors in
@@ -746,6 +748,16 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	public final void setTopic(String channel, String topic) {
 		this.sendRawLine("TOPIC " + channel + " :" + topic);
 	}
+	
+	/**
+	 * Set the logging of private messages.
+	 * 
+	 * @param b
+	 *            Boolean which decides to enable PrivMsg logging or not.
+	 */
+	public final void setPrivMsgVerbose(Boolean b) {
+		this._privMsgVerbose = b;
+	}
 
 	/**
 	 * Kicks a user from a channel. This method attempts to kick a user from a
@@ -912,49 +924,69 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 		}
 		return chat;
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * 
-	 * @see org.jibble.pircbot.PircBotLogger#log(java.lang.String)
-	 */
+	
 	public void log(String line) {
 		if (PircBot._verbose) {
-			logger.info(line);
-		}
-	}
-	
-	final public static String ERROR = "ERROR";
-	final public static String DEBUG = "DEBUG";
-	final public static String FATAL = "FATAL";
-	final public static String WARN = "WARN";
-	
-	public void log(String line, String type) {
-		if (PircBot._verbose) {
-			if (type.equals(PircBot.ERROR)) {
-				logger.error(line);
-			}
-			else if (type.equals(PircBot.DEBUG)) {
-				logger.debug(line);
-			}
-			else if (type.equals(PircBot.FATAL)) {
-				logger.fatal(line);
-			}
-			else if (type.equals(PircBot.WARN)) {
-				logger.warn(line);
+			if (!isMTOD(line)) {
+			if (isPrivMsg(line)) {
+				if (PircBot._privMsgVerbose) {
+					logger.info(line);
+				}
 			}
 			else {
 				logger.info(line);
+			}
 			}
 		}
 	}
 	
 	public void logException(Exception e) {
+		if (PircBot._verbose) {
+			
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		String stacktrace = sw.toString();
 		
-		log(stacktrace, ERROR);
+		log(stacktrace);
+		
+		}
+	}
+	
+	public boolean isMTOD(String line) {
+		int counter = 0;
+		int i = 0;
+		for (; i < line.length(); i++) {
+			if (line.charAt(i) == ':') {
+				counter++;
+			}
+			
+			if (counter == 2) {
+				i++;
+				break;
+			}
+		}
+		
+		if (!line.substring(i).isEmpty()) {
+			
+		if (line.substring(i).charAt(0) == '-') {
+			return true;
+		}
+		
+		if (line.contains("message of the day")) {
+			return true;
+		}
+		
+		}
+		
+		return false;
+	}
+	
+	public boolean isPrivMsg(String line) {
+		if (line.contains("PRIVMSG")) {
+			return true;
+		}
+		
+		return false;
 	}
 
 	/**

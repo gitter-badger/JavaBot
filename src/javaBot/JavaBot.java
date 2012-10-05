@@ -42,6 +42,8 @@ public class JavaBot extends PircBot implements Runnable {
 	private static boolean PROTECT_MODE = false;
 	
 	private static long AUTHENCIATION_DELAY = 0;
+	
+	private static boolean PRIV_MSG_LOGGING = false;
 	// CONFIG VARIABLES \\
 	
 	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>();
@@ -90,7 +92,10 @@ public class JavaBot extends PircBot implements Runnable {
 		JavaBot.PROTECT_MODE = Boolean.parseBoolean(JavaBot.getConfig("protectMode"));
 
 		JavaBot.AUTHENCIATION_DELAY = Long.parseLong(JavaBot.getConfig("authenciationDelay"));
+		
+		JavaBot.PRIV_MSG_LOGGING = Boolean.parseBoolean(JavaBot.getConfig("privMsgLog"));
 
+		// channel array
 		JavaBot.CHANNEL_ARRAY = JavaBot.CHANNEL.split(" ");
 	}
 
@@ -103,12 +108,14 @@ public class JavaBot extends PircBot implements Runnable {
 		bot.setMessageDelay(JavaBot.DELAY);    // Set message delay.
 
 		bot.setVerbose(true);
+		
+		bot.setPrivMsgVerbose(JavaBot.PRIV_MSG_LOGGING);
 
 		try {
 			bot.connectServer();
 		}
 		catch (final NickAlreadyInUseException e) {
-			JavaBot.NAME = JavaBot.NAME + Math.abs(new Generator().nextInt(1000,9999));
+			JavaBot.NAME = JavaBot.NAME + new Generator().nextInt(1000,9999);
 			bot.setName(JavaBot.NAME);
 			try {
 				bot.connectServer();
