@@ -1,7 +1,7 @@
 nick = JavaBot
 server = card.freenode.net
-channels = #javabot
-nickserv_password = SET ACCORDINGLY
+channels = #blahblahblah
+nickserv_password = 
 
 # server_password can be set to "null" if there is none
 server_password = null
@@ -12,13 +12,11 @@ messageDelay = 0
 port = 6667
 sslConnection = false
 
-# FloodPreventor
-floodDuration = 10000
-messageLimit = 9
-throttledTime = 60000
-
 # Protection mode - false or true
 protectMode = false
 
 # Authenciation security
 authenciationDelay = 10000
+
+# Private messages logged? - disabled by default. PASSWORDS CAN SHOW, BEWARE
+privMsgLog = false
