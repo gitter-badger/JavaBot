@@ -5,14 +5,9 @@ package javaBot;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLSocketFactory;
-
-import org.jibble.pircbot.IrcException;
 import org.jibble.pircbot.NickAlreadyInUseException;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
@@ -28,17 +23,16 @@ import wei2912.utilities.Generator;
 public class JavaBot extends PircBot implements Runnable {
 
 	// CONFIG VARIABLES \\
-	private static String CHANNEL = "";
-	private static long DELAY = 0;
-	private static String NAME = "";
-	private static String NICKSERV_PASSWORD = "";
-	private static String SERVER_PASSWORD = "";
-	private static String PREFIX = "";
-	private static String SERVER = "";
+	private static String NAMES = "";
 	
-	private static int PORT = 6667;
-	private static boolean SSL = false;
+	private static String SERVERS = "";
+	private static String CHANNELS = "";
+	
+	private static String NICKSERV_PASSWORDS = "";
 
+	private static String PREFIX = "";
+	private static long DELAY = 0;
+	
 	private static boolean PROTECT_MODE = false;
 	
 	private static long AUTHENCIATION_DELAY = 0;
@@ -46,49 +40,85 @@ public class JavaBot extends PircBot implements Runnable {
 	private static boolean PRIV_MSG_LOGGING = false;
 	// CONFIG VARIABLES \\
 	
-	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>();
-	static String[] CHANNEL_ARRAY;
-	static boolean CYCLE = false;
-	String line	              = null;
-	static ArrayList<String>	               configArray	      = new ArrayList<String>();
-	static ArrayList<String>	               configNameArray	  = new ArrayList<String>();
-	File config	          = new File("files/config.txt");
-	BufferedReader configIn;
-	BufferedReader in;
+	// INSTANCE VARIABLES \\
+	private String name = "";
+	private String server = "";
+	private String nickserv_password = "";
+	private String[] channels_array; // list of channels
+	// INSTANCE VARIABLES \\
+	
+	// INFORMATION VARIABLES \\
+	private static String[] SERVERS_ARRAY; // list of servers
+	// INFORMATION VARIABLES \\
+	
+	protected static ArrayList<String>	AUTHENCIATED = new ArrayList<String>(); // authenciated user list
 
-	protected JavaBot() {
+	static ArrayList<String> configArray = new ArrayList<String>();
+	static ArrayList<String> configNameArray = new ArrayList<String>();
+	
+	private static BufferedReader FileReader;
+	
+	// to read the server list.
+	public static void main(String args[]) {
+		File config	          = new File("files/config.txt");
+		
 		try {
-			this.configIn = new BufferedReader(new FileReader(this.config));
-			this.line = this.configIn.readLine();
+			JavaBot.FileReader = new BufferedReader(new FileReader(config));
+			String line = null;
+			line = JavaBot.FileReader.readLine();
 
-			while (this.line != null) {
-				final String[] array = this.line.split("=");
+			while (line != null) {
+				final String[] array = line.split("=");
 
 				if (array.length == 2) {
 					JavaBot.configNameArray.add(array[0].replaceAll("=", "").trim());
 					JavaBot.configArray.add(array[1].trim());
 				}
 
-				this.line = this.configIn.readLine();
+				line = JavaBot.FileReader.readLine();
 			}
 		}
 		catch (Exception e) {
-			logException(e);
+			e.printStackTrace();
 		}
-
-		JavaBot.NAME = JavaBot.getConfig("nick");
-		JavaBot.SERVER = JavaBot.getConfig("server");
-		JavaBot.CHANNEL = JavaBot.getConfig("channels");
-		JavaBot.NICKSERV_PASSWORD = JavaBot.getConfig("nickserv_password");
 		
-		JavaBot.SERVER_PASSWORD = JavaBot.getConfig("server_password");
+		JavaBot.getAllConfig();
+		
+		String[] channels = JavaBot.CHANNELS.split("%"); // split up into channels for each server
+		String[] passwords = JavaBot.NICKSERV_PASSWORDS.split("%"); // split up into channels for each server
+		String[] names = JavaBot.NAMES.split("%"); // split up into channels for each server
+		
+		/** TRIMMING VARIABLES **/
+		for (int i = 0; i < SERVERS_ARRAY.length; i++) SERVERS_ARRAY[i] = SERVERS_ARRAY[i].trim();
+		for (int i = 0; i < channels.length; i++) channels[i] = channels[i].trim();
+		for (int i = 0; i < passwords.length; i++) passwords[i] = passwords[i].trim();
+		for (int i = 0; i < names.length; i++) names[i] = names[i].trim();
+		/** TRIMMING VARIABLES **/
+		
+		for (int i = 0; i < SERVERS_ARRAY.length; i++) {
+			JavaBot bot = new JavaBot();
+			
+			// setting of values respective to each instance of the bot
+			bot.setServer(SERVERS_ARRAY[i]);
+			bot.setBotName(names[i]);
+			bot.setPassword(passwords[i]);
+			bot.channels_array = channels[i].split(","); // split up channels
+			
+			new Thread(bot).start();
+		}
+	}
+	
+	private static void getAllConfig() {
+		JavaBot.NAMES = JavaBot.getConfig("nicks");
+		
+		JavaBot.SERVERS = JavaBot.getConfig("servers");
+		JavaBot.CHANNELS = JavaBot.getConfig("channels");
+		
+		JavaBot.NICKSERV_PASSWORDS = JavaBot.getConfig("nickserv_passwords");
 		
 		JavaBot.PREFIX = JavaBot.getConfig("prefix");
 		JavaBot.DELAY = Long.parseLong(JavaBot.getConfig("messageDelay"));
 		
-		JavaBot.PORT = Integer.parseInt(JavaBot.getConfig("port"));
-		JavaBot.SSL = Boolean.parseBoolean(JavaBot.getConfig("sslConnection"));
-
 		JavaBot.PROTECT_MODE = Boolean.parseBoolean(JavaBot.getConfig("protectMode"));
 
 		JavaBot.AUTHENCIATION_DELAY = Long.parseLong(JavaBot.getConfig("authenciationDelay"));
@@ -96,29 +126,25 @@ public class JavaBot extends PircBot implements Runnable {
 		JavaBot.PRIV_MSG_LOGGING = Boolean.parseBoolean(JavaBot.getConfig("privMsgLog"));
 
 		// channel array
-		JavaBot.CHANNEL_ARRAY = JavaBot.CHANNEL.split(" ");
+		JavaBot.SERVERS_ARRAY = JavaBot.SERVERS.split("%");
 	}
 
-	@Override
 	public void run() {
+		setName(name);
+		setMessageDelay(JavaBot.DELAY);    // Set message delay.
 
-		final JavaBot bot = new JavaBot();
-
-		bot.setName(JavaBot.NAME);
-		bot.setMessageDelay(JavaBot.DELAY);    // Set message delay.
-
-		bot.setVerbose(true);
+		setVerbose(true);
 		
-		bot.setPrivMsgVerbose(JavaBot.PRIV_MSG_LOGGING);
+		setPrivMsgVerbose(JavaBot.PRIV_MSG_LOGGING);
 
 		try {
-			bot.connectServer();
+			this.connect(this.server);
 		}
 		catch (final NickAlreadyInUseException e) {
-			JavaBot.NAME = JavaBot.NAME + new Generator().nextInt(1000,9999);
-			bot.setName(JavaBot.NAME);
+			name = name + new Generator().nextInt(1000,9999);
+			setName(name);
 			try {
-				bot.connectServer();
+				this.connect(this.server);
 			}
 			catch (final Exception e2) {
 				logException(e2);
@@ -128,40 +154,18 @@ public class JavaBot extends PircBot implements Runnable {
 			logException(e);
 		}
 
-		bot.identify(JavaBot.NICKSERV_PASSWORD);
+		identify(nickserv_password);
 		
-		bot.sendRawLine("MODE "+JavaBot.getBotName()+" +B");
+		sendRawLine("MODE "+JavaBot.getBotName(this)+" +B");
 		
-		try {
-			Thread.sleep(1000);
-		}
-		catch (final InterruptedException e1) {
-			logException(e1);
-		}
-
-		for (final String element : JavaBot.CHANNEL_ARRAY) {
-			bot.joinChannel(element);
+		for (int i = 0; i < channels_array.length; i++) {
+			joinChannel(channels_array[i]);
 		}
 	}
 	
-	public void connectServer() throws SSLException, IOException, IrcException {
-		if (JavaBot.SSL) {
-			if (JavaBot.SERVER_PASSWORD.equalsIgnoreCase("null")) {
-				this.connect(JavaBot.SERVER, JavaBot.PORT, null, SSLSocketFactory.getDefault());
-			}
-			else {
-				this.connect(JavaBot.SERVER, JavaBot.PORT, JavaBot.SERVER_PASSWORD, SSLSocketFactory.getDefault());
-			}
-		}
-		else {
-			if (JavaBot.SERVER_PASSWORD.equalsIgnoreCase("null")) {
-				this.connect(JavaBot.SERVER, JavaBot.PORT, null, null);
-			}
-			else {
-				this.connect(JavaBot.SERVER, JavaBot.PORT, JavaBot.SERVER_PASSWORD, null);
-			}
-		}
-	}
+	/****************
+	 * METHODS THAT DECIDE THE BEHAVIOUR OF EACH BOT
+	 */
 
 	@Override
 	protected void onMessage(String channel, String sender, String login, String hostname, 
@@ -197,7 +201,7 @@ public class JavaBot extends PircBot implements Runnable {
 	        String kickerLogin, String kickerHostname, String recipientNick,
 	        String reason) {
 		
-		if (recipientNick.equals(JavaBot.NAME) && 
+		if (recipientNick.equals(name) && 
 			!kickerNick.equals("ChanServ")) {
 			this.joinChannel(channel);
 
@@ -240,6 +244,9 @@ public class JavaBot extends PircBot implements Runnable {
 		System.exit(0);
 	}
 
+	/****************
+	 * HELPER METHODS
+	 */
 	
 	/**
 	 * Sends a notice if the target is in a channel the bot 
@@ -254,7 +261,7 @@ public class JavaBot extends PircBot implements Runnable {
 	 * @param message Message to be sent.
 	 */
 	public void notice(String sender, String message) {
-		final String[] CHANNEls = JavaBot.CHANNEL.split(" ");
+		final String[] CHANNEls = JavaBot.CHANNELS.split(" ");
 
 		boolean found = false;
 		for (final String CHANNEl2 : CHANNEls) {
@@ -279,17 +286,29 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 	}
 	
+	// bot logging
 	public void logException(Exception e, String target) {
 		this.logException(e);
 		
 		if (e.getMessage() == null) {
-			
 			this.notice(target, e.getClass().getName()); 
 			this.notice(target, "Please report to the botmaster.");
 		}
 		else {
 			this.notice(target, e.getMessage() + " - Please report to the botmaster.");
 		}
+	}
+	
+	public void setBotName(String config) {
+		name = config;
+	}
+	
+	public void setServer(String config) {
+		server = config;
+	}
+	
+	public void setPassword(String config) {
+		nickserv_password = config;
 	}
 	
 	private static String getConfig(String parameter) {
@@ -302,8 +321,8 @@ public class JavaBot extends PircBot implements Runnable {
 		}
 	}
 
-	public static String getBotName() {
-		return JavaBot.NAME;
+	public static String getBotName(JavaBot bot) {
+		return bot.name;
 	}
 
 	public static long getDelay() {
@@ -314,20 +333,8 @@ public class JavaBot extends PircBot implements Runnable {
 		return JavaBot.PREFIX;
 	}
 
-	public static String getServerName() {
-		return JavaBot.SERVER;
-	}
-
 	public static long getAuthenciationDelay() {
 		return JavaBot.AUTHENCIATION_DELAY;
-	}
-	
-	public static int getPortNumber() {
-		return JavaBot.PORT;
-	}
-	
-	public static boolean ifSslConnection() {
-		return JavaBot.SSL;
 	}
 
 	public static boolean getProtectMode() {

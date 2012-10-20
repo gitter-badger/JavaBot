@@ -7,6 +7,7 @@ public class Security {
 	String	hostname;
 	String	message;
 	String	sender;
+	String botName;
 
 	public Security(JavaBot bot, String channel, String sender, String message,
 	        String hostname) {
@@ -15,10 +16,12 @@ public class Security {
 		this.sender = sender;
 		this.message = message;
 		this.hostname = hostname;
+		
+		this.botName = JavaBot.getBotName(bot);
 	}
 
 	public void run() {
-		if (this.message.startsWith("!kick") && this.message.endsWith(JavaBot.getBotName())) {
+		if (this.message.startsWith("!kick") && this.message.endsWith(this.botName)) {
 			this.bot.joinChannel(this.channel);
 
 			if (JavaBot.getProtectMode()) {
@@ -30,9 +33,9 @@ public class Security {
 			}
 		}
 		else if (this.message.startsWith("!ban")
-		        && this.message.endsWith(JavaBot.getBotName())) {
+		        && this.message.endsWith(this.botName)) {
 
-			this.bot.sendMessage("ChanServ", "unban " + JavaBot.getBotName() + "!*@*");
+			this.bot.sendMessage("ChanServ", "unban " + this.botName + "!*@*");
 			this.bot.joinChannel(this.channel);
 
 			if (JavaBot.getProtectMode()) {
