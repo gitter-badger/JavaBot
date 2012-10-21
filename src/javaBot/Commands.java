@@ -1,12 +1,9 @@
 package javaBot;
 
-// ~--- non-JDK imports --------------------------------------------------------
+//~--- non-JDK imports --------------------------------------------------------
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Collection;
 import javaBot.plugins.intl.javaBotPlugin;
+import javaBot.plugins.intl.pluginHelp;
 
 import net.xeoh.plugins.base.PluginManager;
 import net.xeoh.plugins.base.impl.PluginManagerFactory;
@@ -15,161 +12,137 @@ import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.jibble.pircbot.User;
 
+//~--- JDK imports ------------------------------------------------------------
+
+//~--- non-JDK imports --------------------------------------------------------
+import java.io.File;
+
+import java.net.MalformedURLException;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 public class Commands {
-	int	                      a;
-	static JavaBot	          bot;
-	String	                  channel;
-	String	                  hostname;
-	String	                  login;
-	String	                  message;
-	String	                  sender;
-	boolean	                  training;
-	
-	public static final JSPFProperties props = new JSPFProperties();
-	public static final PluginManager pm  = PluginManagerFactory.createPluginManager(props);
+    public static final JSPFProperties props = new JSPFProperties();
+    public static final PluginManager  pm    = PluginManagerFactory.createPluginManager(props);
+    static JavaBot                     bot;
 
-	Collection<javaBotPlugin>	plugins;
+    // HELP VARIABLES \\
+    private static String[]   references;
+    private static String[]   syntax;
 
-	public Commands(JavaBot bot, String sender, String login, String channel,
-	        String hostname, String message) throws MalformedURLException {
-		Commands.bot = bot;
-		this.channel = channel;
-		this.sender = sender;
-		this.hostname = hostname;
-		this.message = message;
-		this.login = login;
+    // HELP VARIABLES \\
 
-		props.setProperty(PluginManager.class, "cache.enabled", "true");
-		props.setProperty(PluginManager.class, "cache.mode",    "weak");
-		props.setProperty(PluginManager.class, "cache.file",    "jspf.cache");
+    private static String[]   texts;
+    String                    channel;
+    String                    message;
+    Collection<javaBotPlugin> plugins;
+    String                    sender;
 
-		PluginManager pm = PluginManagerFactory.createPluginManager(props);
+    public Commands(JavaBot bot, String sender, String channel, String message) throws MalformedURLException {
+        Commands.bot = bot;
+        this.channel = channel;
+        this.sender  = sender;
+        this.message = message;
+        props.setProperty(PluginManager.class, "cache.enabled", "true");
+        props.setProperty(PluginManager.class, "cache.mode", "weak");
+        props.setProperty(PluginManager.class, "cache.file", "jspf.cache");
 
-		pm.addPluginsFrom(new File("plugins/").toURI());
-		plugins = new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
-	}
+        PluginManager pm = PluginManagerFactory.createPluginManager(props);
 
-	public void run() {
+        pm.addPluginsFrom(new File("plugins/").toURI());
+        plugins    = new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
+        texts      = pluginHelp.getTexts();
+        references = pluginHelp.getReferences();
+        syntax     = pluginHelp.getSyntax();
+    }
 
-		if (this.message.startsWith(JavaBot.getPrefix())) {
+    public void run() {
+        if (this.message.startsWith(JavaBot.getPrefix())) {
+            if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "help")) {
+                int          counter = 0;
+                StringBuffer string  = new StringBuffer("");
 
-			if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "quit")) {
-				if (JavaBot.AUTHENCIATED.contains(this.sender)
-				        || Authenciation.checkNoUsers()) {
-					Commands.bot.disconnect();
-				}
-				else {
-					Commands.notEnoughStatus(this.sender);
-				}
-			}
+                for (int i = 0; i < references.length; i++) {
+                    string.append(references[i]);
+                    string.append(" ");
+                    counter++;
 
-			else if (this.message.startsWith(JavaBot.getPrefix() + "join ")) {
-				final String parameter = Commands.checkParameter(this.message)[0];
+                    if (counter == 5) {    // once it reaches 5 "references"
+                        Commands.bot.notice(this.sender, string.toString());
+                        string  = new StringBuffer("");
+                        counter = 0;       // reset
+                    }
+                }
 
-				if (JavaBot.AUTHENCIATED.contains(this.sender)
-				        || Authenciation.checkNoUsers()) {
-					Commands.bot.joinChannel(parameter);
-				}
-				else {
-					Commands.notEnoughStatus(this.sender);
-				}
-			}
+                // Ending message
+                Commands.bot.notice(this.sender,
+                                    "All commands must have the prefix '" + JavaBot.getPrefix()
+                                    + "' infront of the command.");
+            } else if (this.message.startsWith(JavaBot.getPrefix() + "help ")) {
+                final String command = Commands.checkParameter(this.message)[0];
+                List<String> list    = Arrays.asList(references);
 
-			else if (this.message
-			        .equalsIgnoreCase(JavaBot.getPrefix() + "part")) {
-				if (JavaBot.AUTHENCIATED.contains(this.sender)
-				        || Authenciation.checkNoUsers()) {
-					Commands.bot.partChannel(this.channel, this.sender);
-				}
-				else {
-					Commands.notEnoughStatus(this.sender);
-				}
-			}
+                if (list.contains(command)) {    // if the command is inside references
+                    int index = list.indexOf(command);
 
-			else if (this.message.startsWith(JavaBot.getPrefix() + "part ")) {
-				final String parameter = Commands.checkParameter(this.message)[0];
-				if (JavaBot.AUTHENCIATED.contains(this.sender)
-				        || Authenciation.checkNoUsers()) {
-					Commands.bot.partChannel(parameter, this.sender);
-				}
-				else {
-					Commands.notEnoughStatus(this.sender);
-				}
-			}
+                    Commands.bot.notice(this.sender, command + " | " + syntax[index] + " | " + texts[index]);
+                } else {
+                    Commands.bot.notice(this.sender, "The command \"" + command + "\" cannot be found.");
+                }
+            }
 
-			else if (this.message.startsWith(JavaBot.getPrefix() + "tell ")) {
-				final String user = Commands.checkParameter(this.message)[0];
-				final String messageTold = Commands.checkParameter(this.message)[1];
-				if (JavaBot.AUTHENCIATED.contains(this.sender) || Authenciation.checkNoUsers()) {
-					Commands.bot.sendMessage(user, messageTold);
-				}
-				else {
-					Commands.notEnoughStatus(this.sender);
-				}
-			}
+            /** PLUGINS */
+            for (final javaBotPlugin plugin : this.plugins) {
+                plugin.init(Commands.bot, this.message, this.channel, this.sender);
+                plugin.run();
+            }
+        }
+    }
 
-			/** HELP commands - MANTAIN THEM WELL */
-			else if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "help")) {
-				// Ending message
-				Commands.bot.notice(
-					this.sender,
-				    "All commands must have the prefix '" + 
-					JavaBot.getPrefix() +
-					"' infront of the command.");
-			}
-			else if (this.message.startsWith(JavaBot.getPrefix() + "help ")) {
-				final String command = Commands.checkParameter(this.message)[0];
+    /** Checks parameters of a message. */
+    public static String[] checkParameter(String string) {
+        final String[]          results1 = string.split(" ");
+        final ArrayList<String> results2 = new ArrayList<String>();
 
-				//TODO To be implemented
-			}
+        for (int i = 1; i < results1.length; i++) {    
+        	// Makes sure that the first entry, the command itself, is removed
+            results2.add(results1[i]);
+        }
 
-			/** PLUGINS */
-			for (final javaBotPlugin plugin : this.plugins) {
-				plugin.init(Commands.bot, this.message, this.channel, this.sender);
-				plugin.run();
-			}
-		}
-	}
+        return results2.toArray(new String[results2.size()]);
+    }
 
-	/** Checks parameters of a message. **/
-	public static String[] checkParameter(String string) {
-		final String[] results1 = string.split(" ");
+    /** Obtain the status of a user or his prefix. */
+    String getPrefix(String nickname, String channel) {
+        String     status     = "";
+        final User userList[] = Commands.bot.getUsers(channel);
 
-		final ArrayList<String> results2 = new ArrayList<String>();
-		for (int i = 1; i < results1.length; i++) { // Makes sure that the first
-			                                        // entry, the command
-			                                        // itself, is removed
-			results2.add(results1[i]);
-		}
+        for (final User user : userList) {
+            if (user.getNick().equals(nickname)) {
+                status = user.getPrefix();
 
-		return results2.toArray(new String[results2.size()]);
-	}
+                break;
+            }
+        }
 
-	/** Obtain the status of a user or his prefix. **/
-	String getPrefix(String nickname, String channel) {
-		String status = "";
-		final User userList[] = Commands.bot.getUsers(channel);
+        return status;
+    }
 
-		for (final User user : userList) {
-			if (user.getNick().equals(nickname)) {
-				status = user.getPrefix();
-
-				break;
-			}
-		}
-
-		return status;
-	}
-
-	/**
-	 * Default message to notify users that an operation is not permitted as
-	 * they do not have enough status
-	 **/
-	public static void notEnoughStatus(String sender) {
-		Commands.bot
-		        .notice(sender,
-		                "Operation not permitted; you are not authenciated. Type #login USER PASSWORD to authenciate yourself. USER and PASSWORD are case sensitive.");
-	}
+    /**
+     * Default message to notify users that an operation is not permitted as
+     * they do not have enough status
+     */
+    public static void notEnoughStatus(String sender) {
+        Commands.bot.notice(
+            sender,
+            "Operation not permitted; you are not authenciated. Type #login USER PASSWORD to authenciate yourself. USER and PASSWORD are case sensitive.");
+    }
 }
 
 // ~ Formatted by Jindent --- http://www.jindent.com
+
+
+//~ Formatted by Jindent --- http://www.jindent.com

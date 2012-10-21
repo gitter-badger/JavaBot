@@ -1,10 +1,10 @@
-# % is used for seperating values per server
+# & is used for seperating values per server
 # , is used for seperating channels
 
-nick = nick1 % nick2 % nick3
-server = server1 % server2 % server3
-channels = #channel1_server1, #channel2_server1 % #channel1_server2 % #channel1_server3
-nickserv_password = pass_server1 % pass_server2 % pass_server3
+nick = nick1 & nick2 & nick3
+server = server1 & server2 & server3
+channels = #channel1_server1, #channel2_server1 & #channel1_server2 & #channel1_server3
+nickserv_password = pass_server1 & pass_server2 & pass_server3
 
 prefix = #
 messageDelay = 0
