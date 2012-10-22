@@ -28,16 +28,17 @@ public class Fortunes extends javaBotPluginAbstract {
     File                     file;
     BufferedReader           in;
     String                   line;
+    final static String directory = "fortunes/";
 
     public void onStart() {
         pluginHelp.addEntry("fortune", "fortune", "Generates fortunes!");
         
         try {
-        	final File folder = new File("fortunes/");
+        	final File folder = new File(Fortunes.directory);
         	String[] list = listFilesForFolder(folder);
         	
         	for (String filename: list) {
-        		file = new File(filename);
+        		file = new File(Fortunes.directory + filename);
         		
         		this.in   = new BufferedReader(new FileReader(this.file));
         		this.line = this.in.readLine();
@@ -45,7 +46,7 @@ public class Fortunes extends javaBotPluginAbstract {
         		StringBuffer temp = new StringBuffer("");
             
         		while (this.line != null) {
-        			if (this.line.equals("%")) {
+        			if (this.line.trim().equals("%")) { // if break found
         				Fortunes.fortunesArray.add(temp.toString());
         				temp = new StringBuffer("");
         			}
@@ -77,6 +78,7 @@ public class Fortunes extends javaBotPluginAbstract {
         	else {
         		final int a = generator.nextInt(0, Fortunes.fortunesArray.size() - 1);
         		bot.notice(sender, Fortunes.fortunesArray.get(a));
+        		System.out.println(Fortunes.fortunesArray.get(a));
         	}
         }
     }
