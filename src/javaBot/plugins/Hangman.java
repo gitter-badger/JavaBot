@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 @PluginImplementation
 
 /** Hangman game! */
-public class Hangman extends javaBotPluginAbstract {
+public class Hangman extends javaBotPluginAbstract { 
     static String               category   = "";
     static DatabaseReader       dbreader   = new DatabaseReader("hangman");
     static int                  difficulty = 3;
@@ -34,10 +34,6 @@ public class Hangman extends javaBotPluginAbstract {
     static int                  lives      = 0;
     static String               word       = "";
     static ArrayList<Character> chosen     = new ArrayList<Character>();
-    static JavaBot              bot;
-    static String               channel;
-    static String               message;
-    static String               sender;
 
     public void onStart() {
         pluginHelp.addEntry("hm", "hm", "Starts a game of hangman.");
@@ -45,32 +41,32 @@ public class Hangman extends javaBotPluginAbstract {
 
     @Override
     public void init(JavaBot bot, String message, String channel, String sender) {
-        Hangman.bot     = bot;
-        Hangman.channel = channel;
-        Hangman.sender  = sender;
-        Hangman.message = message;
+        this.bot     = bot;
+        this.channel = channel;
+        this.sender  = sender;
+        this.message = message;
     }
 
     @Override
     public void run() {
-        if (Hangman.message.equalsIgnoreCase(JavaBot.getPrefix() + "hm")) {
-            Hangman.bot.sendMessage(Hangman.channel, Hangman.sender + " has created a game of hangman.");
-            Hangman.bot.sendMessage(
-                Hangman.channel,
+        if (matchesReference("hm")) {
+            bot.sendMessage(channel, sender + " has created a game of hangman.");
+            bot.sendMessage(
+                channel,
                 "Guess a single letter. If you manage to guess a letter in the word, all instances of that letter will be shown. If you don't, you lose a life.");
-            Hangman.bot.sendMessage(
-                Hangman.channel,
+            bot.sendMessage(
+                channel,
                 "Everyone can play in this game! Just type " + JavaBot.getPrefix()
                 + "hm <Letter> to play. For example, you can type " + JavaBot.getPrefix()
                 + "hm a to show all instances of a, if any. You can also type the full word if you already know it, but only do so if certain.");
             Hangman.hangman = true;
-            Hangman.selectWord();
-        } else if (Hangman.message.startsWith(JavaBot.getPrefix() + "hm ")) {
-            Hangman.play(Hangman.message);
+            this.selectWord();
+        } else if (matchesStartReference("hm")) {
+            play(message);
         }
     }
 
-    public static void play(String message) {
+    public void play(String message) {
         if (Hangman.hangman == true) {
             String                  letter  = Commands.checkParameter(message)[0];
             Pattern                 pattern = null;
@@ -87,7 +83,7 @@ public class Hangman extends javaBotPluginAbstract {
                 letter = letter.toLowerCase();                    // Set to lower case
 
                 if (Hangman.chosen.contains(letter.charAt(0))) {
-                    Hangman.bot.sendMessage(Hangman.channel, "Letter [" + letter + "] already chosen.");
+                    bot.sendMessage(channel, "Letter [" + letter + "] already chosen.");
                 } else if (Hangman.word.contains(letter)) {       // If equal
                     Hangman.chosen.add(letter.charAt(0));
 
@@ -102,9 +98,9 @@ public class Hangman extends javaBotPluginAbstract {
                     Hangman.hidden = hiddenBuffer.toString();
 
                     if (Hangman.hidden.contains(".")) {
-                        Hangman.bot.sendMessage(Hangman.channel, "Word is now [" + Hangman.hidden + "].");
+                        bot.sendMessage(channel, "Word is now [" + Hangman.hidden + "].");
                     } else {
-                        Hangman.bot.sendMessage(Hangman.channel, "Word is now [" + Hangman.hidden + "]. You've won!");
+                        bot.sendMessage(channel, "Word is now [" + Hangman.hidden + "]. You've won!");
 
                         if (Hangman.beforeWord.size() >= 50) {    // Reset
                             Hangman.beforeWord.remove(0);         // Removes first entry
@@ -126,14 +122,14 @@ public class Hangman extends javaBotPluginAbstract {
                             e.printStackTrace();
                         }
 
-                        Hangman.selectWord();
+                        this.selectWord();
                     }
                 } else {                                          // If not equal
                     Hangman.lives--;
                     Hangman.chosen.add(letter.charAt(0));
 
                     if (Hangman.lives <= 0) {
-                        Hangman.bot.sendMessage(Hangman.channel,
+                        bot.sendMessage(channel,
                                                 "Nope, wrong letter. You've lost! The word was [" + Hangman.word
                                                 + "].");
 
@@ -157,14 +153,14 @@ public class Hangman extends javaBotPluginAbstract {
                             e.printStackTrace();
                         }
 
-                        Hangman.selectWord();
+                        this.selectWord();
                     } else {
-                        Hangman.bot.sendMessage(Hangman.channel,
+                        bot.sendMessage(channel,
                                                 "Nope, wrong letter. You now have " + Hangman.lives + " lives.");
                     }
                 }
             } else if (letter.toLowerCase().equals(Hangman.word)) {
-                Hangman.bot.sendMessage(Hangman.channel, "You've won!");
+                bot.sendMessage(channel, "You've won!");
 
                 if (Hangman.beforeWord.size() >= 50) {    // Reset
                     Hangman.beforeWord.remove(0);         // Removes first entry
@@ -184,12 +180,12 @@ public class Hangman extends javaBotPluginAbstract {
                     e.printStackTrace();
                 }
 
-                Hangman.selectWord();
+                this.selectWord();
             } else if (letter.length() > 1) {             // If guessed word failed
                 Hangman.lives--;
 
                 if (Hangman.lives <= 0) {
-                    Hangman.bot.sendMessage(Hangman.channel,
+                    bot.sendMessage(channel,
                                             "Nope, wrong word. You've lost! The word was [" + Hangman.word + "].");
 
                     if (Hangman.beforeWord.size() >= 50) {    // Reset
@@ -212,22 +208,22 @@ public class Hangman extends javaBotPluginAbstract {
                         e.printStackTrace();
                     }
 
-                    Hangman.selectWord();
+                    this.selectWord();
                 } else {
-                    Hangman.bot.sendMessage(Hangman.channel,
+                    bot.sendMessage(channel,
                                             "Nope, wrong word. You now have " + Hangman.lives + " lives.");
                 }
             } else {
-                Hangman.bot.sendMessage(Hangman.channel, "Invalid value.");
+                bot.sendMessage(channel, "Invalid value.");
             }
         } else {
-            Hangman.bot.sendMessage(Hangman.channel,
+            bot.sendMessage(channel,
                                     "Please type " + JavaBot.getPrefix()
                                     + "hm without any parameters to start a new game.");
         }
     }
 
-    public static void selectWord() {
+    public void selectWord() {
         Hangman.chosen = new ArrayList<Character>();
 
         final ArrayList<String> words = new ArrayList<String>();
@@ -240,15 +236,8 @@ public class Hangman extends javaBotPluginAbstract {
                 words.add(Hangman.dbreader.getRec().getString("word"));
             }
 
-            int random = new Generator().nextInt(0, words.size() - 1);    // To be
-
-            // used
-            // after
-            // the
-            // number
-            // of lives
-            // are
-            // found
+            int random = new Generator().nextInt(0, words.size() - 1);    
+            // To be used after the number of lives are found
 
             // Lives
             final ArrayList<String> lives = new ArrayList<String>();
@@ -299,9 +288,9 @@ public class Hangman extends javaBotPluginAbstract {
             }
 
             category = categories.get(random);
-            Hangman.bot.sendMessage(Hangman.channel,
-                                    "New word is [" + Hangman.hidden + "] in category [" + category + "]. You've "
-                                    + Hangman.lives + " lives.");
+            bot.sendMessage(channel,
+                            "New word is [" + Hangman.hidden + "] in category [" + category + "]. You've "
+                            + Hangman.lives + " lives.");
             System.out.println(Hangman.difficulty);
         } catch (final Exception e) {
             e.printStackTrace();
@@ -310,6 +299,3 @@ public class Hangman extends javaBotPluginAbstract {
 }
 
 // ~ Formatted by Jindent --- http://www.jindent.com
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

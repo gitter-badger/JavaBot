@@ -34,10 +34,6 @@ public class TicTacToe extends javaBotPluginAbstract {
 
     // Constants
     final static int win = 5;
-    static JavaBot   bot;
-    static String    channel;
-    static String    message;
-    static String    sender;
 
     public void onStart() {
         pluginHelp.addEntry("t3", "t3", "Starts a game of Tic Tac Toe, 5x5 board.");
@@ -45,15 +41,15 @@ public class TicTacToe extends javaBotPluginAbstract {
 
     @Override
     public void init(JavaBot bot, String message, String channel, String sender) {
-        TicTacToe.bot     = bot;
-        TicTacToe.channel = channel;
-        TicTacToe.sender  = sender;
-        TicTacToe.message = message;
+        this.bot     = bot;
+        this.channel = channel;
+        this.sender  = sender;
+        this.message = message;
     }
 
     @Override
     public void run() {
-        if (TicTacToe.message.equalsIgnoreCase(JavaBot.getPrefix() + "t3")) {
+        if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "t3")) {
 
             // Empty the array
             for (int a = 0; a < 5; a++) {
@@ -62,29 +58,29 @@ public class TicTacToe extends javaBotPluginAbstract {
                 }
             }
 
-            TicTacToe.bot.sendMessage(
-                TicTacToe.channel,
-                TicTacToe.sender
+            this.bot.sendMessage(
+                this.channel,
+                this.sender
                 + " has created a game of tic tac toe with a board of 5x5. To win, you need to get 4 in a row.");
-            TicTacToe.bot.sendMessage(TicTacToe.channel,
+            this.bot.sendMessage(this.channel,
                                       "Type " + JavaBot.getPrefix()
                                       + "t3 <row><column> to join in after he makes his move. An example is "
                                       + Colors.BOLD + JavaBot.getPrefix() + "t3 C3" + Colors.NORMAL
                                       + " for column C, row 3.");
-            TicTacToe.bot.sendMessage(TicTacToe.channel, "The first person to join in gets to play with him.");
-            TicTacToe.printField(TicTacToe.channel, true);
-            TicTacToe.bot.notice(TicTacToe.sender, "Waiting for a person to join you...");
+            this.bot.sendMessage(this.channel, "The first person to join in gets to play with him.");
+            this.printField(this.channel, true);
+            this.bot.notice(this.sender, "Waiting for a person to join you...");
             TicTacToe.tictactoe   = true;
             TicTacToe.Aturn       = false;
             TicTacToe.Bturn       = true;
-            TicTacToe.player1Lock = TicTacToe.sender;    // Locks the player
-        } else if (TicTacToe.message.startsWith(JavaBot.getPrefix() + "t3 ")) {
-            TicTacToe.move(TicTacToe.message, TicTacToe.sender);
+            TicTacToe.player1Lock = this.sender;    // Locks the player
+        } else if (this.message.startsWith(JavaBot.getPrefix() + "t3 ")) {
+            this.move(this.message, this.sender);
         }
     }
 
-    public static void move(String message, String sender) {
-        TicTacToe.sender = sender;
+    public void move(String message, String sender) {
+        this.sender = sender;
 
         if (TicTacToe.tictactoe == true) {
             final String            parameter = Commands.checkParameter(message)[0];
@@ -99,7 +95,7 @@ public class TicTacToe extends javaBotPluginAbstract {
             }
 
             if (!matcher.matches()) {
-                TicTacToe.bot.notice(sender, "Invalid move.");
+                this.bot.notice(sender, "Invalid move.");
             } else {
                 int a = 0;
                 int b = 0;
@@ -133,34 +129,34 @@ public class TicTacToe extends javaBotPluginAbstract {
                         TicTacToe.field[a][b] = 'X';
                         TicTacToe.Aturn       = false;
                         TicTacToe.Bturn       = true;
-                        TicTacToe.printField(TicTacToe.player1Lock);
+                        this.printField(TicTacToe.player1Lock);
 
                         if (TicTacToe.player2Lock != null) {
-                            TicTacToe.bot.notice(TicTacToe.player2Lock, "It's your turn.");
-                            TicTacToe.printField(TicTacToe.player2Lock);
+                            this.bot.notice(TicTacToe.player2Lock, "It's your turn.");
+                            this.printField(TicTacToe.player2Lock);
                         }
                     } else {
-                        TicTacToe.bot.notice(sender, "Invalid move.");
+                        this.bot.notice(sender, "Invalid move.");
                     }
                 } else if (TicTacToe.Bturn) {
                     if (TicTacToe.player2Lock == null) {
                         if (TicTacToe.player1Lock.equals(TicTacToe.player2Lock)) {
-                            TicTacToe.bot.notice(
+                            this.bot.notice(
                                 TicTacToe.player1Lock,
                                 "Please be patient and wait for a person to join you. You may not play a game with yourself.");
                         } else {
                             TicTacToe.player2Lock = sender;
-                            TicTacToe.bot.notice(TicTacToe.player2Lock, "You've successfully joined!");
+                            this.bot.notice(TicTacToe.player2Lock, "You've successfully joined!");
 
                             if (TicTacToe.field[a][b] == ' ') {
                                 TicTacToe.field[a][b] = 'O';
                                 TicTacToe.Aturn       = true;
                                 TicTacToe.Bturn       = false;
-                                TicTacToe.bot.notice(TicTacToe.player1Lock, "It's your turn.");
-                                TicTacToe.printField(TicTacToe.player1Lock);
-                                TicTacToe.printField(TicTacToe.player2Lock);
+                                this.bot.notice(TicTacToe.player1Lock, "It's your turn.");
+                                this.printField(TicTacToe.player1Lock);
+                                this.printField(TicTacToe.player2Lock);
                             } else {
-                                TicTacToe.bot.notice(sender, "Invalid move.");
+                                this.bot.notice(sender, "Invalid move.");
                             }
                         }
                     } else if (sender.equals(TicTacToe.player2Lock)) {
@@ -168,125 +164,125 @@ public class TicTacToe extends javaBotPluginAbstract {
                             TicTacToe.field[a][b] = 'O';
                             TicTacToe.Aturn       = true;
                             TicTacToe.Bturn       = false;
-                            TicTacToe.bot.notice(TicTacToe.player1Lock, "It's your turn.");
-                            TicTacToe.printField(TicTacToe.player1Lock);
-                            TicTacToe.printField(TicTacToe.player2Lock);
+                            this.bot.notice(TicTacToe.player1Lock, "It's your turn.");
+                            this.printField(TicTacToe.player1Lock);
+                            this.printField(TicTacToe.player2Lock);
                         } else {
-                            TicTacToe.bot.notice(sender, "Invalid move.");
+                            this.bot.notice(sender, "Invalid move.");
                         }
                     } else {
-                        TicTacToe.bot.notice(sender, "Invalid move.");
+                        this.bot.notice(sender, "Invalid move.");
                     }
                 } else {
-                    TicTacToe.bot.notice(sender, "Invalid move.");
+                    this.bot.notice(sender, "Invalid move.");
                 }
 
                 // X wins
-                if (TicTacToe.win('X')) {
-                    TicTacToe.bot.notice(TicTacToe.channel, TicTacToe.player1Lock + ": You've won!");
-                    TicTacToe.bot.notice(TicTacToe.channel, "Results (X is the winner):");
-                    TicTacToe.printField(TicTacToe.channel);
+                if (this.win('X')) {
+                    this.bot.notice(this.channel, TicTacToe.player1Lock + ": You've won!");
+                    this.bot.notice(this.channel, "Results (X is the winner):");
+                    this.printField(this.channel);
                     TicTacToe.player1Lock = null;
                     TicTacToe.player2Lock = null;
                     TicTacToe.tictactoe   = false;
                 }
 
                 // O wins
-                else if (TicTacToe.win('O')) {
-                    TicTacToe.bot.sendMessage(TicTacToe.channel, TicTacToe.player2Lock + ": You've won!");
-                    TicTacToe.bot.sendMessage(TicTacToe.channel, "Results (O is the winner):");
-                    TicTacToe.printField(TicTacToe.channel, true);
+                else if (this.win('O')) {
+                    this.bot.sendMessage(this.channel, TicTacToe.player2Lock + ": You've won!");
+                    this.bot.sendMessage(this.channel, "Results (O is the winner):");
+                    this.printField(this.channel, true);
                     TicTacToe.player1Lock = null;
                     TicTacToe.player2Lock = null;
                     TicTacToe.tictactoe   = false;
                 }
 
                 // No more winning moves.
-                else if (!TicTacToe.win(' ')) {
-                    TicTacToe.bot.sendMessage(TicTacToe.channel,
+                else if (!this.win(' ')) {
+                    this.bot.sendMessage(this.channel,
                                               "It's a draw between " + TicTacToe.player1Lock + " and player2Lock"
                                               + "!");
-                    TicTacToe.printField(TicTacToe.channel, true);
+                    this.printField(this.channel, true);
                     TicTacToe.player1Lock = null;
                     TicTacToe.player2Lock = null;
                     TicTacToe.tictactoe   = false;
                 }
             }
         } else {
-            TicTacToe.bot.notice(sender,
+            this.bot.notice(sender,
                                  "Please type " + JavaBot.getPrefix()
                                  + "t3 without any parameters to start a new game.");
         }
     }
 
-    public static void printField(String name) {
-        TicTacToe.bot.notice(name, " |1|2|3|4|5|");
-        TicTacToe.bot.notice(name,
+    public void printField(String name) {
+        this.bot.notice(name, " |1|2|3|4|5|");
+        this.bot.notice(name,
                              "A|" + TicTacToe.field[0][0] + "|" + TicTacToe.field[0][1] + "|" + TicTacToe.field[0][2]
                              + "|" + TicTacToe.field[0][3] + "|" + TicTacToe.field[0][4] + "|");
-        TicTacToe.bot.notice(name,
+        this.bot.notice(name,
                              "B|" + TicTacToe.field[1][0] + "|" + TicTacToe.field[1][1] + "|" + TicTacToe.field[1][2]
                              + "|" + TicTacToe.field[1][3] + "|" + TicTacToe.field[1][4] + "|");
-        TicTacToe.bot.notice(name,
+        this.bot.notice(name,
                              "C|" + TicTacToe.field[2][0] + "|" + TicTacToe.field[2][1] + "|" + TicTacToe.field[2][2]
                              + "|" + TicTacToe.field[2][3] + "|" + TicTacToe.field[2][4] + "|");
-        TicTacToe.bot.notice(name,
+        this.bot.notice(name,
                              "D|" + TicTacToe.field[3][0] + "|" + TicTacToe.field[3][1] + "|" + TicTacToe.field[3][2]
                              + "|" + TicTacToe.field[3][3] + "|" + TicTacToe.field[3][4] + "|");
-        TicTacToe.bot.notice(name,
+        this.bot.notice(name,
                              "E|" + TicTacToe.field[4][0] + "|" + TicTacToe.field[4][1] + "|" + TicTacToe.field[4][2]
                              + "|" + TicTacToe.field[4][3] + "|" + TicTacToe.field[4][4] + "|");
     }
 
-    public static void printField(String name, boolean sendMessage) {
+    public void printField(String name, boolean sendMessage) {
         if (sendMessage == true) {
-            TicTacToe.bot.sendMessage(name, " |1|2|3|4|5|");
-            TicTacToe.bot.sendMessage(name,
+            this.bot.sendMessage(name, " |1|2|3|4|5|");
+            this.bot.sendMessage(name,
                                       "A|" + TicTacToe.field[0][0] + "|" + TicTacToe.field[0][1] + "|"
                                       + TicTacToe.field[0][2] + "|" + TicTacToe.field[0][3] + "|"
                                       + TicTacToe.field[0][4] + "|");
-            TicTacToe.bot.sendMessage(name,
+            this.bot.sendMessage(name,
                                       "B|" + TicTacToe.field[1][0] + "|" + TicTacToe.field[1][1] + "|"
                                       + TicTacToe.field[1][2] + "|" + TicTacToe.field[1][3] + "|"
                                       + TicTacToe.field[1][4] + "|");
-            TicTacToe.bot.sendMessage(name,
+            this.bot.sendMessage(name,
                                       "C|" + TicTacToe.field[2][0] + "|" + TicTacToe.field[2][1] + "|"
                                       + TicTacToe.field[2][2] + "|" + TicTacToe.field[2][3] + "|"
                                       + TicTacToe.field[2][4] + "|");
-            TicTacToe.bot.sendMessage(name,
+            this.bot.sendMessage(name,
                                       "D|" + TicTacToe.field[3][0] + "|" + TicTacToe.field[3][1] + "|"
                                       + TicTacToe.field[3][2] + "|" + TicTacToe.field[3][3] + "|"
                                       + TicTacToe.field[3][4] + "|");
-            TicTacToe.bot.sendMessage(name,
+            this.bot.sendMessage(name,
                                       "E|" + TicTacToe.field[4][0] + "|" + TicTacToe.field[4][1] + "|"
                                       + TicTacToe.field[4][2] + "|" + TicTacToe.field[4][3] + "|"
                                       + TicTacToe.field[4][4] + "|");
         } else {
-            TicTacToe.bot.notice(name, " |1|2|3|4|5|");
-            TicTacToe.bot.notice(name,
+            this.bot.notice(name, " |1|2|3|4|5|");
+            this.bot.notice(name,
                                  "A|" + TicTacToe.field[0][0] + "|" + TicTacToe.field[0][1] + "|"
                                  + TicTacToe.field[0][2] + "|" + TicTacToe.field[0][3] + "|" + TicTacToe.field[0][4]
                                  + "|");
-            TicTacToe.bot.notice(name,
+            this.bot.notice(name,
                                  "B|" + TicTacToe.field[1][0] + "|" + TicTacToe.field[1][1] + "|"
                                  + TicTacToe.field[1][2] + "|" + TicTacToe.field[1][3] + "|" + TicTacToe.field[1][4]
                                  + "|");
-            TicTacToe.bot.notice(name,
+            this.bot.notice(name,
                                  "C|" + TicTacToe.field[2][0] + "|" + TicTacToe.field[2][1] + "|"
                                  + TicTacToe.field[2][2] + "|" + TicTacToe.field[2][3] + "|" + TicTacToe.field[2][4]
                                  + "|");
-            TicTacToe.bot.notice(name,
+            this.bot.notice(name,
                                  "D|" + TicTacToe.field[3][0] + "|" + TicTacToe.field[3][1] + "|"
                                  + TicTacToe.field[3][2] + "|" + TicTacToe.field[3][3] + "|" + TicTacToe.field[3][4]
                                  + "|");
-            TicTacToe.bot.notice(name,
+            this.bot.notice(name,
                                  "E|" + TicTacToe.field[4][0] + "|" + TicTacToe.field[4][1] + "|"
                                  + TicTacToe.field[4][2] + "|" + TicTacToe.field[4][3] + "|" + TicTacToe.field[4][4]
                                  + "|");
         }
     }
 
-    public static boolean win(char character) {
+    public boolean win(char character) {
         if    // Horizontal
                 (((TicTacToe.field[0][0] == character) && (TicTacToe.field[0][1] == character) && (TicTacToe
                     .field[0][2] == character) && (TicTacToe.field[0][3] == character)) || ((TicTacToe
@@ -366,6 +362,3 @@ public class TicTacToe extends javaBotPluginAbstract {
 }
 
 // ~ Formatted by Jindent --- http://www.jindent.com
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

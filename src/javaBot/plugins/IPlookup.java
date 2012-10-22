@@ -39,9 +39,7 @@ public class IPlookup extends javaBotPluginAbstract {
 
     @Override
     public void run() {
-        if (IPlookup.message.startsWith(JavaBot.getPrefix() + "iplookup ")) {
-
-            // TODO Auto-generated method stub
+        if (matchesStartReference("iplookup")) {
             final String server = Commands.checkParameter(IPlookup.message)[0];
 
             try {
@@ -62,6 +60,3 @@ public class IPlookup extends javaBotPluginAbstract {
 }
 
 // ~ Formatted by Jindent --- http://www.jindent.com
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

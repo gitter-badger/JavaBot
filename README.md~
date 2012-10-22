@@ -61,7 +61,7 @@ logout
 You can skip authenciation, but beware, anyone can use JavaBot's quit, part, join commands.         
          
 4. Learn the commands and features         
-In JavaBot beta 1.5.0 a help feature has been introduced! Type help (make sure to add the prefix)
+In JavaBot beta 1.5.0 a help feature has been introduced! Type help (make sure to prepend the prefix)
 
 Here's the features:                       
 Protection mode - Goes against anyone who bans/kicks the bot or sets an universal ban. Disabled by default.          

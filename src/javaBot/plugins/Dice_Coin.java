@@ -15,10 +15,8 @@ import wei2912.utilities.Generator;
 
 /** A plugin that allows you to roll a dice and flip a coin */
 public class Dice_Coin extends javaBotPluginAbstract {
-    static JavaBot bot;
-    static String  message;
-    static String  sender;
-
+	Generator generator = new Generator();
+	
     public void onStart() {
         pluginHelp.addEntry("flip", "flip", "Flip a coin!");
         pluginHelp.addEntry("roll", "roll", "Roll a dice!");
@@ -26,23 +24,23 @@ public class Dice_Coin extends javaBotPluginAbstract {
 
     @Override
     public void init(JavaBot bot, String message, String channel, String sender) {
-        Dice_Coin.bot     = bot;
-        Dice_Coin.message = message;
-        Dice_Coin.sender  = sender;
+        this.bot     = bot;
+        this.message = message;
+        this.sender  = sender;
     }
 
     @Override
     public void run() {
-        if (Dice_Coin.message.equalsIgnoreCase(JavaBot.getPrefix() + "flip")) {
+        if (matchesReference("flip")) {
             final int side = new Generator().nextInt(0, 1);
 
             if (side == 0) {
-                Dice_Coin.bot.notice(Dice_Coin.sender, "Coin flipped to tails.");
+                bot.notice(sender, "Coin flipped to tails.");
             } else if (side == 1) {
-                Dice_Coin.bot.notice(Dice_Coin.sender, "Coin flipped to head.");
+                bot.notice(sender, "Coin flipped to head.");
             }
-        } else if (Dice_Coin.message.equalsIgnoreCase(JavaBot.getPrefix() + "roll")) {
-            Dice_Coin.bot.notice(Dice_Coin.sender, "Number rolled is " + new Generator().nextInt(1, 6));
+        } else if (matchesReference("roll")) {
+            bot.notice(sender, "Number rolled is " + generator.nextInt(1, 6));
         }
     }
 }

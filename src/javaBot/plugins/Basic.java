@@ -2,12 +2,9 @@ package javaBot.plugins;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import javaBot.Commands;
 import javaBot.JavaBot;
-
 import javaBot.plugins.intl.javaBotPluginAbstract;
 import javaBot.plugins.intl.pluginHelp;
-
 import net.xeoh.plugins.base.annotations.PluginImplementation;
 
 @PluginImplementation
@@ -28,42 +25,42 @@ public class Basic extends javaBotPluginAbstract {
     }
 
     public void run() {
-        if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "quit")) {
-            if (JavaBot.isAuthenciated(this.sender)) {
+        if (matchesReference("quit")) {
+            if (isSenderAuthenciated()) {
                 bot.disconnect();
             } else {
-                Commands.notEnoughStatus(this.sender);
+                notEnoughStatus();
             }
-        } else if (this.message.startsWith(JavaBot.getPrefix() + "join ")) {
-            final String parameter = Commands.checkParameter(this.message)[0];
+        } else if (matchesStartReference("join")) {
+            final String parameter = checkParameter(0);
 
-            if (JavaBot.isAuthenciated(this.sender)) {
+            if (isSenderAuthenciated()) {
                 bot.joinChannel(parameter);
             } else {
-                Commands.notEnoughStatus(this.sender);
+                notEnoughStatus();
             }
-        } else if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "part")) {
-            if (JavaBot.isAuthenciated(this.sender)) {
+        } else if (matchesReference("part")) {
+            if (isSenderAuthenciated()) {
                 bot.partChannel(this.channel, this.sender);
             } else {
-                Commands.notEnoughStatus(this.sender);
+                notEnoughStatus();
             }
-        } else if (this.message.startsWith(JavaBot.getPrefix() + "part ")) {
-            final String parameter = Commands.checkParameter(this.message)[0];
+        } else if (matchesStartReference("part")) {
+            final String parameter = checkParameter(0);
 
-            if (JavaBot.isAuthenciated(this.sender)) {
+            if (isSenderAuthenciated()) {
                 bot.partChannel(parameter, this.sender);
             } else {
-                Commands.notEnoughStatus(this.sender);
+                notEnoughStatus();
             }
-        } else if (this.message.startsWith(JavaBot.getPrefix() + "tell ")) {
-            final String user        = Commands.checkParameter(this.message)[0];
-            final String messageTold = Commands.checkParameter(this.message)[1];
+        } else if (matchesStartReference("tell")) {
+            final String user        = checkParameter(0);
+            final String messageTold = checkParameter(1);
 
-            if (JavaBot.isAuthenciated(this.sender)) {
+            if (isSenderAuthenciated()) {
                 bot.sendMessage(user, messageTold);
             } else {
-                Commands.notEnoughStatus(this.sender);
+                notEnoughStatus();
             }
         }
     }
