@@ -12,8 +12,8 @@ public class Authenciation {
     static String                 message;
     static String                 sender;
     final StrongPasswordEncryptor passwordEncryptor = new StrongPasswordEncryptor();
-
-    public Authenciation(JavaBot bot, String sender, String message) {
+    
+    public void updateVariables(JavaBot bot, String sender, String message) {
         Authenciation.bot     = bot;
         Authenciation.sender  = sender;
         Authenciation.message = message;

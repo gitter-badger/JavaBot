@@ -7,8 +7,8 @@ public class Security {
     String  hostname;
     String  message;
     String  sender;
-
-    public Security(JavaBot bot, String channel, String sender, String message, String hostname) {
+    
+    public void updateVariables(JavaBot bot, String channel, String sender, String message, String hostname) {
         this.bot      = bot;
         this.channel  = channel;
         this.sender   = sender;

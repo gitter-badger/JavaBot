@@ -41,11 +41,7 @@ public class Commands {
     Collection<javaBotPlugin> plugins;
     String                    sender;
 
-    public Commands(JavaBot bot, String sender, String channel, String message) throws MalformedURLException {
-        Commands.bot = bot;
-        this.channel = channel;
-        this.sender  = sender;
-        this.message = message;
+    public Commands() {
         props.setProperty(PluginManager.class, "cache.enabled", "true");
         props.setProperty(PluginManager.class, "cache.mode", "weak");
         props.setProperty(PluginManager.class, "cache.file", "jspf.cache");
@@ -57,6 +53,13 @@ public class Commands {
         texts      = pluginHelp.getTexts();
         references = pluginHelp.getReferences();
         syntax     = pluginHelp.getSyntax();
+    }
+    
+    public void updateVariables(JavaBot bot, String sender, String channel, String message) {
+        Commands.bot = bot;
+        this.channel = channel;
+        this.sender  = sender;
+        this.message = message;
     }
 
     public void run() {
