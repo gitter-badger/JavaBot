@@ -50,8 +50,8 @@ public class Fortunes extends javaBotPluginAbstract {
         				Fortunes.fortunesArray.add(temp.toString());
         				temp = new StringBuffer("");
         			}
-        			else {
-        				temp.append(this.line);
+        			else if (!this.line.trim().equals("")) { // if not empty
+        				temp.append(this.line.trim() + " ");
         			}
             	
         			this.line = this.in.readLine();
