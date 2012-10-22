@@ -65,6 +65,12 @@ public class JavaBot extends PircBot implements Runnable {
     private String[] channels_array;    // list of channels
 
     // INSTANCE VARIABLES \\
+    
+    // SOFTWARE VARIABLES (???) \\
+    private Commands commands = new Commands();
+    private Security security = new Security();
+    private Authenciation authenciation = new Authenciation();
+    // SOFTWARE VARIABLES (???) \\
 
     // to read the server list.
     public static void main(String args[]) {
@@ -200,25 +206,21 @@ public class JavaBot extends PircBot implements Runnable {
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
         if (message.startsWith(JavaBot.getPrefix())) {
-            try {
-                new Commands(this, sender, channel, message).run();
-            } catch (final MalformedURLException e) {
-                logException(e, sender);
-            }
+            commands.updateVariables(this, sender, channel, message);
+            commands.run();
         }
 
-        new Security(this, channel, sender, message, hostname).run();
+        security.updateVariables(this, channel, sender, message, hostname);
+        security.run();
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
         if (message.startsWith(JavaBot.getPrefix())) {
-            try {
-                new Commands(this, sender, sender, message).run();
-                new Authenciation(this, sender, message).run();
-            } catch (final MalformedURLException e) {
-                logException(e, sender);
-            }
+            commands.updateVariables(this, sender, sender, message);
+            commands.run();
+            authenciation.updateVariables(this, sender, message);
+            authenciation.run();
         }
     }
 
