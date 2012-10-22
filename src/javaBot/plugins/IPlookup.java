@@ -20,27 +20,22 @@ import java.net.UnknownHostException;
 
 /** Looks up IP addresses */
 public class IPlookup extends javaBotPluginAbstract {
-    static JavaBot bot;
-    static String  channel;
-    static String  message;
-    static String  sender;
-
     public void onStart() {
         pluginHelp.addEntry("iplookup", "iplookup [host]", "Looks up the IPs of the servers.");
     }
 
     @Override
     public void init(JavaBot bot, String message, String channel, String sender) {
-        IPlookup.bot     = bot;
-        IPlookup.message = message;
-        IPlookup.channel = channel;
-        IPlookup.sender  = sender;
+        this.bot     = bot;
+        this.message = message;
+        this.channel = channel;
+        this.sender  = sender;
     }
 
     @Override
     public void run() {
         if (matchesStartReference("iplookup")) {
-            final String server = Commands.checkParameter(IPlookup.message)[0];
+            final String server = Commands.checkParameter(this.message)[0];
 
             try {
                 final InetAddress[] addresses = InetAddress.getAllByName(server);
@@ -51,9 +46,9 @@ public class IPlookup extends javaBotPluginAbstract {
                     servers.append(" | ");
                 }
 
-                IPlookup.bot.notice(IPlookup.sender, servers.toString());
+                this.bot.notice(this.sender, servers.toString());
             } catch (final UnknownHostException e) {
-                IPlookup.bot.notice(IPlookup.sender, "Unknown host.");
+            	this.bot.notice(this.sender, "Unknown host.");
             }
         }
     }
