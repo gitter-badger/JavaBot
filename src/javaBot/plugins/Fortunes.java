@@ -73,14 +73,16 @@ public class Fortunes extends javaBotPluginAbstract {
     public void run() {
         if (matchesReference("fortune")) {
         	if (Fortunes.fortunesArray.size() == 0) {
-        		bot.notice(sender, "No fortunes have been found.");
+        		this.bot.notice(sender, "No fortunes have been found.");
         	}
         	else {
-        		final int a = generator.nextInt(0, Fortunes.fortunesArray.size() - 1);
-        		bot.notice(sender, Fortunes.fortunesArray.get(a));
-        		System.out.println(Fortunes.fortunesArray.get(a));
+        		generateFortune(sender);
         	}
         }
+    }
+    
+    public void onJoin(String channel, String nick, String login, String hostname) {
+    	generateFortune(nick);
     }
     
 	public String[] listFilesForFolder(final File folder) {
@@ -95,6 +97,11 @@ public class Fortunes extends javaBotPluginAbstract {
 	    }
 	    
 	    return array.toArray(new String[array.size()]);
+	}
+	
+	private void generateFortune(String nick) {
+		final int index = generator.nextInt(0, Fortunes.fortunesArray.size() - 1);
+		this.bot.notice(nick, Fortunes.fortunesArray.get(index));
 	}
 }
 

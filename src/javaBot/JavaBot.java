@@ -1,7 +1,10 @@
 package javaBot;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collection;
 import javaBot.plugins.intl.javaBotPlugin;
 
 import net.xeoh.plugins.base.PluginManager;
@@ -15,18 +18,6 @@ import org.jibble.pircbot.User;
 
 import wei2912.utilities.Generator;
 
-//~--- JDK imports ------------------------------------------------------------
-
-//~--- non-JDK imports --------------------------------------------------------
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-
-import java.net.MalformedURLException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-
 /**
  * @version 1.5.0
  * @author wei2912
@@ -34,28 +25,31 @@ import java.util.Collection;
 
 /** JavaBot main class */
 public class JavaBot extends PircBot implements Runnable {
-    private static long   AUTHENCIATION_DELAY = 0;
+	// STATIC "MAGIC" VARIABLES \\
+	private final static String SERVERS_SEPERATOR = "&";
+	private final static String CHANNELS_SEPERATOR = ",";
+	// STATIC "MAGIC" VARIABLES \\
+	
+    // CONFIG VARIABLES \\
+	private static long   AUTHENCIATION_DELAY = 0;
     private static String CHANNELS            = "";
     private static long   DELAY               = 0;
-
-    // CONFIG VARIABLES \\
     private static String            NAMES              = "";
     private static String            NICKSERV_PASSWORDS = "";
     private static String            PREFIX             = "";
     private static String            SERVERS            = "";
     private static boolean           PROTECT_MODE       = false;
     private static boolean           PRIV_MSG_LOGGING   = false;
-
-    // CONFIG VARIABLES \\
-
     private static ArrayList<String> AUTHENCIATED       = new ArrayList<String>();    // authenciated user list
+    // CONFIG VARIABLES \\
+    
     static ArrayList<String>         configArray        = new ArrayList<String>();
     static ArrayList<String>         configNameArray    = new ArrayList<String>();
     private static BufferedReader    FileReader;
-
+    private static Collection<javaBotPlugin> plugins;
+    
     // INFORMATION VARIABLES \\
     private static String[] SERVERS_ARRAY;    // list of servers
-
     // INFORMATION VARIABLES \\
 
     // INSTANCE VARIABLES \\
@@ -63,7 +57,6 @@ public class JavaBot extends PircBot implements Runnable {
     private String   nickserv_password = "";
     private String   server            = "";
     private String[] channels_array;    // list of channels
-
     // INSTANCE VARIABLES \\
     
     // SOFTWARE VARIABLES (???) \\
@@ -71,16 +64,14 @@ public class JavaBot extends PircBot implements Runnable {
     private Security security = new Security();
     private Authenciation authenciation = new Authenciation();
     // SOFTWARE VARIABLES (???) \\
-
+    
     // to read the server list.
     public static void main(String args[]) {
         File config = new File("files/config.txt");
 
         try {
             JavaBot.FileReader = new BufferedReader(new FileReader(config));
-
             String line = null;
-
             line = JavaBot.FileReader.readLine();
 
             while (line != null) {
@@ -99,44 +90,22 @@ public class JavaBot extends PircBot implements Runnable {
 
         JavaBot.getAllConfig();
 
-        String[] channels  = JavaBot.CHANNELS.split("&");              
-        String[] passwords = JavaBot.NICKSERV_PASSWORDS.split("&");  
-        String[] names     = JavaBot.NAMES.split("&");
+        String[] channels  = JavaBot.CHANNELS.split(SERVERS_SEPERATOR);              
+        String[] passwords = JavaBot.NICKSERV_PASSWORDS.split(SERVERS_SEPERATOR);  
+        String[] names     = JavaBot.NAMES.split(SERVERS_SEPERATOR);
 
         /** TRIMMING VARIABLES */
-        for (int i = 0; i < SERVERS_ARRAY.length; i++) {
-            SERVERS_ARRAY[i] = SERVERS_ARRAY[i].trim();
-        }
+        SERVERS_ARRAY = trimArray(SERVERS_ARRAY);
+        channels = trimArray(channels);
+        passwords = trimArray(passwords);
+        names = trimArray(names);
 
-        for (int i = 0; i < channels.length; i++) {
-            channels[i] = channels[i].trim();
-        }
-
-        for (int i = 0; i < passwords.length; i++) {
-            passwords[i] = passwords[i].trim();
-        }
-
-        for (int i = 0; i < names.length; i++) {
-            names[i] = names[i].trim();
-        }
-
-        /** TRIMMING VARIABLES */
-
+        initPlugins();
+        
         /** CLASSES onStart() */
         new onStart();
 
         /** PLUGINS onStart() */
-        JSPFProperties props = new JSPFProperties();
-
-        props.setProperty(PluginManager.class, "cache.enabled", "true");
-        props.setProperty(PluginManager.class, "cache.mode", "weak");
-        props.setProperty(PluginManager.class, "cache.file", "jspf.cache");
-
-        PluginManager pm = PluginManagerFactory.createPluginManager(props);
-
-        pm.addPluginsFrom(new File("plugins/").toURI());
-
-        Collection<javaBotPlugin> plugins = new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
 
         for (final javaBotPlugin plugin : plugins) {
             plugin.onStart();
@@ -149,7 +118,7 @@ public class JavaBot extends PircBot implements Runnable {
             bot.setServer(SERVERS_ARRAY[i]);
             bot.setBotName(names[i]);
             bot.setPassword(passwords[i]);
-            bot.channels_array = channels[i].split(",");    // split up channels
+            bot.channels_array = channels[i].split(CHANNELS_SEPERATOR);    // split up channels
             new Thread(bot).start();
         }
     }
@@ -166,11 +135,10 @@ public class JavaBot extends PircBot implements Runnable {
         JavaBot.PRIV_MSG_LOGGING    = Boolean.parseBoolean(JavaBot.getConfig("privMsgLog"));
 
         // channel array
-        JavaBot.SERVERS_ARRAY = JavaBot.SERVERS.split("&");
+        JavaBot.SERVERS_ARRAY = JavaBot.SERVERS.split(SERVERS_SEPERATOR);
     }
 
     public void run() {
-
         /** Bot starting up! */
         setName(name);
         setMessageDelay(JavaBot.DELAY);    // Set message delay.
@@ -266,11 +234,42 @@ public class JavaBot extends PircBot implements Runnable {
         Commands.pm.shutdown();    // Shutdown plugin manager
         System.exit(0);
     }
+    
+    protected void onJoin(String channel, String sender, String login, String hostname) {
+        for (final javaBotPlugin plugin : plugins) {
+            plugin.onJoin(channel, sender, login, hostname);
+        }
+    }
+    
+    protected void onPart(String channel, String sender, String login, String hostname) {
+        for (final javaBotPlugin plugin : plugins) {
+            plugin.onPart(channel, sender, login, hostname);
+        }
+    }
 
+    /**
+     * REFACTORED METHODS
+     * LOOK UNDER HERE FOR DETAILS
+     */
+    
+    private static void initPlugins() {
+    	JSPFProperties props = new JSPFProperties();
+        PluginManager pm = PluginManagerFactory.createPluginManager(props);
+        pm.addPluginsFrom(new File("plugins/").toURI());
+        JavaBot.plugins =  new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
+    }
+    
+    private static String[] trimArray(String[] array) {
+        for (int i = 0; i < array.length; i++) {
+            array[i] = array[i].trim();
+        }
+        return array;
+    }
+    
     /**
      * HELPER METHODS
      */
-
+    
     /**
      * Sends a notice if the target is in a channel the bot
      * is in. Or else, send a private message so that no
@@ -293,14 +292,11 @@ public class JavaBot extends PircBot implements Runnable {
             for (final User user : userList) {
                 if (user.getNick().equals(sender)) {
                     found = true;
-
                     break;
                 }
             }
 
-            if (found == true) {
-                break;
-            }
+            if (found == true) { break; }
         }
 
         if (found == true) {
@@ -358,7 +354,7 @@ public class JavaBot extends PircBot implements Runnable {
     }
 
     public static boolean isAuthenciated(String nick) {
-        return JavaBot.isAuthenciated(Authenciation.sender) || Authenciation.checkNoUsers();
+        return (JavaBot.isAuthenciated(nick) || Authenciation.checkNoUsers());
     }
 
     public static String getBotName(JavaBot bot) {
@@ -383,6 +379,3 @@ public class JavaBot extends PircBot implements Runnable {
 }
 
 // ~ Formatted by Jindent --- http://www.jindent.com
-
-
-//~ Formatted by Jindent --- http://www.jindent.com

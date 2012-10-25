@@ -49,8 +49,7 @@ public class Announcement extends javaBotPluginAbstract {
         		}
 
         		bot.sendMessage(channel, users.toString() + ": " + sender + " is announcing: " + announcement.toString());
-        	}
-        	else {
+        	} else {
         		notEnoughStatus();
         	}
         }

@@ -8,10 +8,11 @@ import net.xeoh.plugins.base.Plugin;
 
 public interface javaBotPlugin extends Plugin {
     public void init(JavaBot bot, String message, String channel, String sender);
-
     public void run();
-
+    
     public void onStart();
+    public void onJoin(String channel, String sender, String login, String hostname);
+    public void onPart(String channel, String sender, String login, String hostname);
 }
 
 

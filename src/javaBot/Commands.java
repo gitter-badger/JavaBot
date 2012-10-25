@@ -2,6 +2,11 @@ package javaBot;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import javaBot.plugins.intl.javaBotPlugin;
 import javaBot.plugins.intl.pluginHelp;
 
@@ -11,18 +16,6 @@ import net.xeoh.plugins.base.util.JSPFProperties;
 import net.xeoh.plugins.base.util.PluginManagerUtil;
 
 import org.jibble.pircbot.User;
-
-//~--- JDK imports ------------------------------------------------------------
-
-//~--- non-JDK imports --------------------------------------------------------
-import java.io.File;
-
-import java.net.MalformedURLException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class Commands {
     public static final JSPFProperties props = new JSPFProperties();

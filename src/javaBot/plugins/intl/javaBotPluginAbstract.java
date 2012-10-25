@@ -12,12 +12,9 @@ public abstract class javaBotPluginAbstract implements javaBotPlugin {
     protected String  sender;
 
     /** To be overridded */
-    @Override
     public void init(JavaBot bot, String message, String channel, String sender) {}
 
     public void run() {}
-
-    public void onStart() {}
     
     /** Helper methods to make writing plugins extraordinarily easy! **/
     
@@ -52,6 +49,11 @@ public abstract class javaBotPluginAbstract implements javaBotPlugin {
     public final String checkParameter(int position) {
     	return Commands.checkParameter(message)[position];
     }
+    
+    /** on* functions **/
+    public void onStart() {}
+    public void onJoin(String channel, String sender, String login, String hostname) {}
+    public void onPart(String channel, String sender, String login, String hostname) {}
 }
 
 
