@@ -4,9 +4,7 @@ package javaBot;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import javaBot.plugins.intl.javaBotPlugin;
 import javaBot.plugins.intl.pluginHelp;
 
@@ -23,12 +21,6 @@ public class Commands {
     static JavaBot                     bot;
 
     // HELP VARIABLES \\
-    private static String[]   references;
-    private static String[]   syntax;
-
-    // HELP VARIABLES \\
-
-    private static String[]   texts;
     String                    channel;
     String                    message;
     Collection<javaBotPlugin> plugins;
@@ -43,9 +35,6 @@ public class Commands {
 
         pm.addPluginsFrom(new File("plugins/").toURI());
         plugins    = new PluginManagerUtil(pm).getPlugins(javaBotPlugin.class);
-        texts      = pluginHelp.getTexts();
-        references = pluginHelp.getReferences();
-        syntax     = pluginHelp.getSyntax();
     }
     
     public void updateVariables(JavaBot bot, String sender, String channel, String message) {
@@ -58,36 +47,14 @@ public class Commands {
     public void run() {
         if (this.message.startsWith(JavaBot.getPrefix())) { // commands
             if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "help")) {
-                int          counter = 0;
-                StringBuffer string  = new StringBuffer("");
-
-                for (int i = 0; i < references.length; i++) {
-                    string.append(references[i]);
-                    string.append(" ");
-                    counter++;
-
-                    if (counter == 5) {    // once it reaches 5 "references"
-                        Commands.bot.notice(this.sender, string.toString());
-                        string  = new StringBuffer("");
-                        counter = 0;       // reset
-                    }
-                }
-
+            	pluginHelp.msgReference(bot, this.sender);
                 // Ending message
                 Commands.bot.notice(this.sender,
                                     "All commands must have the prefix '" + JavaBot.getPrefix()
                                     + "' infront of the command.");
             } else if (this.message.startsWith(JavaBot.getPrefix() + "help ")) {
                 final String command = Commands.checkParameter(this.message)[0];
-                List<String> list    = Arrays.asList(references);
-
-                if (list.contains(command)) {    // if the command is inside references
-                    int index = list.indexOf(command);
-
-                    Commands.bot.notice(this.sender, command + " | " + syntax[index] + " | " + texts[index]);
-                } else {
-                    Commands.bot.notice(this.sender, "The command \"" + command + "\" cannot be found.");
-                }
+                pluginHelp.msgSpecific(bot, this.sender, command);
             }
 
             /** PLUGINS */

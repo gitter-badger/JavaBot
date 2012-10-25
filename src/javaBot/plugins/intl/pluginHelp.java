@@ -3,8 +3,12 @@ package javaBot.plugins.intl;
 //~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
+import javaBot.Commands;
+import javaBot.JavaBot;
 
 public class pluginHelp {
+	private static final String DEBUG = "[DEBUG]";
+	
     public static ArrayList<String> references = new ArrayList<String>();
     public static ArrayList<String> texts      = new ArrayList<String>();
     public static ArrayList<String> syntax     = new ArrayList<String>();
@@ -18,27 +22,41 @@ public class pluginHelp {
     }
     
     public static void addDebugEntry(String reference, String text) {
-    	if (!pluginHelp.references.contains(reference)) { // check if it doesn't contain
-    		pluginHelp.references.add(reference);
-    		pluginHelp.texts.add("DEBUG: " + text);
-    		pluginHelp.syntax.add("Add bot's nick + " + reference + " EXAMPLE: \"JavaBot, " + reference + "\"");
+    	if (!pluginHelp.references.contains(DEBUG + reference)) { // check if it doesn't contain
+    		pluginHelp.references.add(DEBUG + reference);
+    		pluginHelp.texts.add(text);
+    		pluginHelp.syntax.add("Type bot's nick + " + reference);
     	}
     }
+    
+    public static void msgReference(JavaBot bot, String nick) {
+        int          counter = 0;
+        StringBuffer string  = new StringBuffer("");
 
-    public static String[] getReferences() {
-        return getArray(references);
-    }
+        for (int i = 0; i < references.size(); i++) {
+            string.append(references.get(i));
+            string.append(" ");
+            counter++;
 
-    public static String[] getTexts() {
-        return getArray(texts);
-    }
-
-    public static String[] getSyntax() {
-        return getArray(syntax);
+            if (counter == 5) {    // once it reaches 5 "references"
+                bot.notice(nick, string.toString());
+                string  = new StringBuffer("");
+                counter = 0;       // reset
+            }
+        }
     }
     
-    private static String[] getArray(ArrayList<String> arraylist) {
-    	return (String[]) arraylist.toArray(new String[0]);
+    public static void msgSpecific(JavaBot bot, String nick, String command) {
+        if (references.contains(command)) {    // if the command is inside references
+            int index = references.indexOf(command);
+            bot.notice(nick, command + " | " + syntax.get(index) + " | " + texts.get(index));
+        } else if (references.contains(DEBUG + command)) {
+            int index = references.indexOf(DEBUG + command);
+            bot.notice(nick, DEBUG + command + " | " + syntax.get(index) + " | " + texts.get(index));
+        }
+        else {
+            bot.notice(nick, "The command \"" + command + "\" cannot be found.");
+        }
     }
 }
 
