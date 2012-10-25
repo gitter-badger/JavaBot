@@ -52,11 +52,11 @@ public class Commands {
         Commands.bot = bot;
         this.channel = channel;
         this.sender  = sender;
-        this.message = message;
+        this.message = message.trim();
     }
 
     public void run() {
-        if (this.message.startsWith(JavaBot.getPrefix())) {
+        if (this.message.startsWith(JavaBot.getPrefix())) { // commands
             if (this.message.equalsIgnoreCase(JavaBot.getPrefix() + "help")) {
                 int          counter = 0;
                 StringBuffer string  = new StringBuffer("");
@@ -96,6 +96,14 @@ public class Commands {
                 plugin.run();
             }
         }
+        else if (this.message.startsWith(JavaBot.getBotName(bot))) { 
+        	// short messages usually used for debugging.
+        	if (this.message.endsWith("ping")) {
+        		bot.sendMessage(this.channel, this.sender + ": pong");
+        	}
+        }
+        
+        System.out.println(JavaBot.getBotName(bot));
     }
 
     /** Checks parameters of a message. */

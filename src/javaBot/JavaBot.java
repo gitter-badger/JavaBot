@@ -173,23 +173,20 @@ public class JavaBot extends PircBot implements Runnable {
      */
     @Override
     protected void onMessage(String channel, String sender, String login, String hostname, String message) {
-        if (message.startsWith(JavaBot.getPrefix())) {
-            commands.updateVariables(this, sender, channel, message);
-            commands.run();
-        }
-
+        commands.updateVariables(this, sender, channel, message);
         security.updateVariables(this, channel, sender, message, hostname);
+        
+        commands.run();
         security.run();
     }
 
     @Override
     protected void onPrivateMessage(String sender, String login, String hostname, String message) {
-        if (message.startsWith(JavaBot.getPrefix())) {
-            commands.updateVariables(this, sender, sender, message);
-            commands.run();
-            authenciation.updateVariables(this, sender, message);
-            authenciation.run();
-        }
+        commands.updateVariables(this, sender, sender, message);
+        authenciation.updateVariables(this, sender, message);
+        
+        commands.run();
+        authenciation.run();
     }
 
     @Override
