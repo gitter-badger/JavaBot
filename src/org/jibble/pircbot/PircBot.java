@@ -982,7 +982,7 @@ public abstract class PircBot implements ReplyConstants, PircBotLogger {
 	}
 	
 	public boolean isPrivMsg(String line) {
-		if (line.contains("PRIVMSG")) {
+		if (line.contains("PRIVMSG") && !line.contains("PRIVMSG #")) { // check if not private messaging to a channel
 			return true;
 		}
 		
