@@ -2,11 +2,7 @@ package javaBot.plugins.intl;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.awt.List;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 public class pluginHelp {
     public static ArrayList<String> references = new ArrayList<String>();
@@ -18,6 +14,14 @@ public class pluginHelp {
     		pluginHelp.references.add(reference);
     		pluginHelp.texts.add(text);
     		pluginHelp.syntax.add(syntaxString);
+    	}
+    }
+    
+    public static void addDebugEntry(String reference, String text) {
+    	if (!pluginHelp.references.contains(reference)) { // check if it doesn't contain
+    		pluginHelp.references.add(reference);
+    		pluginHelp.texts.add("DEBUG: " + text);
+    		pluginHelp.syntax.add("Add bot's nick + " + reference + " EXAMPLE: \"JavaBot, " + reference + "\"");
     	}
     }
 
